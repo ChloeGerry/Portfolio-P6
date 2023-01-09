@@ -133,34 +133,33 @@ loginNavigation.addEventListener("click", () => {
     mainContent.style.display = "none";
 })
 
-mainWrapper.addEventListener("click", () => {
-    loginNavigation.style.fontWeight = "400";
-    loginWrapper.style.display = "none";
-    mainContent.style.display = "initial";
-})
+// mainWrapper.addEventListener("click", () => {
+//     loginNavigation.style.fontWeight = "400";
+//     loginWrapper.style.display = "none";
+//     mainContent.style.display = "initial";
+// })
 
-const sendEmail = () => {
+const loginSubmit = () => {
     const emailInput = document.querySelector(".js-emailInput");
-    emailInput.addEventListener("submit", (event) => {
-        const email = event.target.value;
-    })
-}
-
-const sendPassword = () => {
     const passwordInput = document.querySelector(".js-passwordInput");
-    passwordInput.addEventListener("submit", (event) => {
-        const password = event.target.value;
-    })
+    const userLogin = document.querySelector(".js-login__form");
+    userLogin.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const login = {
+            email: emailInput.value,
+            password: passwordInput.value
+        };
+        const chargeUtile = JSON.stringify(login);
+
+        fetch("http://localhost:5678/api/users/login", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: chargeUtile
+        })
+    });
 }
 
-sendEmail();
-sendPassword();
-
-fetch("http://localhost:5678/api/users/login"), {
-    method: "POST",
-    headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify()
-}
+loginSubmit();

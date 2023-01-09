@@ -155,6 +155,7 @@ nav li {
     font-weight: 700;
     color: #FFFFFF;
 	width: fit-content;
+	cursor: pointer;
 }
 
 #introduction {
