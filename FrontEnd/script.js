@@ -1,7 +1,3 @@
-// compte test : 
-// email = sophie.bluel@test.tld
-// password = S0phie
-
 fetch("http://localhost:5678/api/works")
     .then((result) => {
         if (result.ok) {
@@ -124,8 +120,12 @@ const updateCategories = (categories) => {
 const headerNavigation = document.querySelectorAll(".js-header__navigation");
 const loginNavigation = headerNavigation[2];
 const loginWrapper = document.querySelector(".js-login");
-const mainWrapper = document.querySelector(".js-main");
 const mainContent = document.querySelector(".js-main__content");
+const emailLabel = document.querySelector(".js-emailLabel");
+const emailInput = document.querySelector(".js-emailInput");
+const passwordLabel = document.querySelector(".js-passwordLabel");
+const passwordInput = document.querySelector(".js-passwordInput");
+const submitButton = document.querySelector(".js-loginButton");
 
 loginNavigation.addEventListener("click", () => {
     loginNavigation.style.fontWeight = "600";
@@ -133,15 +133,7 @@ loginNavigation.addEventListener("click", () => {
     mainContent.style.display = "none";
 })
 
-// mainWrapper.addEventListener("click", () => {
-//     loginNavigation.style.fontWeight = "400";
-//     loginWrapper.style.display = "none";
-//     mainContent.style.display = "initial";
-// })
-
 const loginSubmit = () => {
-    const emailInput = document.querySelector(".js-emailInput");
-    const passwordInput = document.querySelector(".js-passwordInput");
     const userLogin = document.querySelector(".js-login__form");
     userLogin.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -159,7 +151,40 @@ const loginSubmit = () => {
         },
         body: chargeUtile
         })
+
+        .then((result) => {
+            if (result.ok) {
+                loginNavigation.style.fontWeight = "400";
+                loginWrapper.style.display = "none";
+                mainContent.style.display = "initial";
+                emailLabel.innerText = "";
+                passwordLabel.innerText = "";
+                return result.json();
+            }
+            if (result.status === 404) {
+                passwordLabel.innerText = "";
+                emailLabel.innerText = "Adresse email invalide !";
+                emailLabel.style.margin = "8px 0px 32px 0px";
+                emailInput.style.marginBottom = "0px";
+            } else if (result.status === 401) {
+                emailLabel.innerText = "";
+                passwordLabel.innerText = "Mot de passe invalide !";
+                passwordLabel.style.margin = "8px 0px 32px 0px"
+                passwordInput.style.marginBottom = "0px";
+            }
+        })
+        .then((login) => {
+            const token = login.token; 
+            console.log(token);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     });
 }
 
 loginSubmit();
+
+// compte test : 
+// email = sophie.bluel@test.tld
+// password = S0phie
