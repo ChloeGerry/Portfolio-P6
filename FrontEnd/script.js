@@ -121,11 +121,14 @@ const headerNavigation = document.querySelectorAll(".js-header__navigation");
 const loginNavigation = headerNavigation[2];
 const loginWrapper = document.querySelector(".js-login");
 const mainContent = document.querySelector(".js-main__content");
+const input = document.querySelectorAll("form input");
 const emailLabel = document.querySelector(".js-emailLabel");
 const emailInput = document.querySelector(".js-emailInput");
 const passwordLabel = document.querySelector(".js-passwordLabel");
 const passwordInput = document.querySelector(".js-passwordInput");
 const submitButton = document.querySelector(".js-loginButton");
+const changeBanner = document.querySelector(".js-change__banner");
+const modificationLinks = document.querySelectorAll(".js-change__wrapper");
 
 loginNavigation.addEventListener("click", () => {
     loginNavigation.style.fontWeight = "600";
@@ -144,12 +147,12 @@ const loginSubmit = () => {
         const chargeUtile = JSON.stringify(login);
 
         fetch("http://localhost:5678/api/users/login", {
-        method: "POST",
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        body: chargeUtile
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: chargeUtile
         })
 
         .then((result) => {
@@ -157,8 +160,13 @@ const loginSubmit = () => {
                 loginNavigation.style.fontWeight = "400";
                 loginWrapper.style.display = "none";
                 mainContent.style.display = "initial";
+                changeBanner.style.display = "initial";
+                loginNavigation.innerText = "logout";
                 emailLabel.innerText = "";
                 passwordLabel.innerText = "";
+                for (let i = 0; i < modificationLinks.length; i++) {
+                    modificationLinks[i].style.display = "initial";
+                }
                 return result.json();
             }
             if (result.status === 404) {

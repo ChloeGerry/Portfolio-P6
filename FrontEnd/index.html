@@ -9,84 +9,128 @@
 		<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 		<meta name="description" content="">
 		<link rel="stylesheet" href="./assets/style.css">
+		<script src="https://kit.fontawesome.com/5f8396907e.js" crossorigin="anonymous"></script>
 		<script src="./script.js" defer></script>
 	</head>
 	<body>
-		<header>
-			<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
-			<nav>
-				<ul>
-					<li class="js-header__navigation">projets</li>
-					<li class="js-header__navigation">contact</li>
-					<li class="js-header__navigation">login</li>
-					<li><img src="./assets/icons/instagram.png" alt="Instagram" class="header__logo"></li>
-				</ul>
-			</nav>
-		</header>
-		<main>
-			<section class="login js-login">
-				<div class="login__wrapper">
-					<h2>Log In</h2>
-					<form method="post" class="login__form js-login__form">
-						<label for="email" class="login__text">
-							E-mail
-						</label>
-						<input type="email" class="login__emailInput js-emailInput" />
-						<div class="js-emailLabel"></div>
-						<label for="password" class="login__text">
-							Mot de passe
-						</label>
-						<input type="password" class="login__passwordInput js-passwordInput"/>
-						<div class="js-passwordLabel"></div>
-						<div class="login__buttonWrapper">
-							<button type="submit" class="login__button js-loginButton">
-								Se connecter
-							</button>
-							<a href="#" class="login__passwordLink">
-								Mot de passe oublié
-							</a>
-						</div>
-					</form>
-				</div>
-			</section>
-			<div class="js-main__content">
-				<section id="introduction">
-					<figure>
-						<img src="./assets/images/sophie-bluel.png" alt="">
-					</figure>
-					<article>
-						<h2>Designer d'espace</h2>
-						<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
-						<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
-						<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
-					</article>
-				</section>
-				<section id="portfolio">
-					<h2>Mes Projets</h2>
-					<nav class="navigationMenu--projects js-navigationMenu--projects"></nav>
-					<div class="gallery js-gallery"></div>
-				</section>
-				<section id="contact">
-					<h2>Contact</h2>
-					<p>Vous avez un projet ? Discutons-en !</p>
-					<form action="#" method="post">
-						<label for="name">Nom</label>
-						<input type="text" name="name" id="name">
-						<label for="email">Email</label>
-						<input type="email" name="email" id="email">
-						<label for="message">Message</label>
-						<textarea name="message" id="message" cols="30" rows="10"></textarea>
-						<input type="submit" value="Envoyer">
-					</form>
-				</section>
+		<div class="change__banner--wrapper js-change__banner">
+			<div class="change__banner">
+				<i class="fa-regular fa-pen-to-square change__banner--icon"></i>
+				<p class="change__banner--text">Mode édition</p>
+				<button type="button" class="change__banner--button">
+					publier les changements
+				</button>
 			</div>
-		</main>
-		<footer id="footer" class="footer">
-			<nav>
-				<ul>
-					<li>Mentions Légales</li>
-				</ul>
-			</nav>
-		</footer>
+		</div>
+		<div class="fullContent">
+			<header>
+				<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+				<nav>
+					<ul>
+						<li class="js-header__navigation">projets</li>
+						<li class="js-header__navigation">contact</li>
+						<li class="js-header__navigation">login</li>
+						<li><img src="./assets/icons/instagram.png" alt="Instagram" class="header__logo"></li>
+					</ul>
+				</nav>
+			</header>
+			<main>
+				<section class="login js-login">
+					<div class="login__wrapper">
+						<h2>Log In</h2>
+						<form method="post" class="login__form js-login__form">
+							<label for="email" class="login__text">
+								E-mail
+							</label>
+							<input type="email" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" required />
+							<div class="js-emailLabel"></div>
+							<label for="password" class="login__text">
+								Mot de passe
+							</label>
+							<input type="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" autocomplete required />
+							<div class="js-passwordLabel"></div>
+							<div class="login__buttonWrapper">
+								<button type="submit" class="login__button js-loginButton">
+									Se connecter
+								</button>
+								<a href="#" class="login__passwordLink">
+									Mot de passe oublié
+								</a>
+							</div>
+						</form>
+					</div>
+				</section>
+				<!-- <dialog class="modal__gallery">
+					<i class="fa-solid fa-xmark modal__closingIcon"></i>
+					<h2>Galerie photo</h2>
+					<div class="modal__buttonWrapper">
+						<button type="button" class="modal__button">
+							Ajouter une photo
+						</button>
+						<a href="#" class="modal__deleteWork">
+							Supprimer la galerie
+						</a>
+					</div>
+				</dialog> -->
+				<div class="js-main__content">
+					<section id="introduction">
+						<figure>
+							<img src="./assets/images/sophie-bluel.png" alt="Picture of Sophie Bluel">
+							<div class="change__wrapper js-change__wrapper">
+								<a class="change__wrapperLink" id="change__picture">
+									<i class="fa-regular fa-pen-to-square change__icon"></i>
+									<p class="change__text">modifier</p>
+								</a>
+							</div>
+						</figure>
+						<article>
+							<div class="change__wrapper js-change__wrapper">
+								<a class="change__wrapperLink" id="change__description">
+									<i class="fa-regular fa-pen-to-square change__icon"></i>
+									<p class="change__text">modifier</p>
+								</a>
+							</div>
+							<h2>Designer d'espace</h2>
+							<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
+							<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
+							<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
+						</article>
+					</section>
+					<section id="portfolio">
+						<div class="change__wrapper--project">
+							<h2>Mes Projets</h2>
+							<div class="change__wrapper js-change__wrapper" id="change__portfolio">
+									<a class="change__wrapperLink">
+										<i class="fa-regular fa-pen-to-square change__icon"></i>
+										<p class="change__text">modifier</p>
+									</a>
+							</div>
+						</div>
+						<nav class="navigationMenu--projects js-navigationMenu--projects"></nav>
+						<div class="gallery js-gallery"></div>
+					</section>
+					<section id="contact">
+						<h2>Contact</h2>
+						<p>Vous avez un projet ? Discutons-en !</p>
+						<form action="#" method="post">
+							<label for="name">Nom</label>
+							<input type="text" name="name" id="name">
+							<label for="email">Email</label>
+							<input type="email" name="email" id="email">
+							<label for="message">Message</label>
+							<textarea name="message" id="message" cols="30" rows="10"></textarea>
+							<input type="submit" value="Envoyer">
+						</form>
+					</section>
+				</div>
+			</main>
+			<footer id="footer" class="footer">
+				<nav>
+					<ul>
+						<li>Mentions Légales</li>
+					</ul>
+				</nav>
+			</footer>
+		</div>
 	</body>
 </html>
