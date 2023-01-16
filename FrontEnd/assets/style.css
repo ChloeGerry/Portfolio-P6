@@ -47,6 +47,8 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
+
+/* generic css */
 body {
 	background-color: #FFFEF8;
 }
@@ -56,12 +58,13 @@ body {
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
-	background-color: #FFFEF8;
 }
+/* end of generic css */
 
-/* .change__banner--wrapper {
-	display: flex;
-} */
+/* banner */
+.js-change__banner {
+	display: none;
+}
 
 .change__banner {
 	display: flex;
@@ -94,6 +97,7 @@ body {
     font-weight: 500;
 	cursor: pointer;
 }
+/* end of banner */
 
 header {
 	display: flex;
@@ -146,6 +150,7 @@ nav li {
 	width: 19px;
 }
 
+/* login page */
 .login {
 	display: none;
 }
@@ -186,18 +191,22 @@ nav li {
     align-items: center;
 }
 
-.login__button {
+.button {
 	background-color: #1D6154;
     border: 1px solid #1D6154;
 	border-radius: 20px;
-    margin: 8px 0px 32px 0px;
-    padding: 8px 40px;
     font-family: 'Syne';
     font-weight: 700;
     color: #FFFFFF;
-	width: fit-content;
+	/* width: fit-content; */
 	cursor: pointer;
 }
+
+.login__button {
+	padding: 8px 40px;
+    margin: 8px 0px 32px 0px;
+}
+/* end of login page */
 
 #introduction {
 	display: flex;
@@ -216,18 +225,25 @@ nav li {
 	flex: 1
 }
 
+/* change for all part */
 .change__wrapper {
 	display: none;
 }
+/* end change for all part */
 
+/* change for picture part */
 #change__picture {
 	margin: 16px 0px 0px 57px;
 }
+/* end change for picture part */
 
+/* change for description */
 #change__description {
 	margin-bottom: 24px;
 }
+/* end change for description */
 
+/* change for all */
 .change__wrapperLink {
 	display: flex;
 	cursor: pointer;
@@ -242,6 +258,7 @@ nav li {
 .change__text {
 	font-size: 14px;
 }
+/* end of change for all */
 
 #introduction h2 {
 	margin-bottom: 1em;
@@ -255,6 +272,7 @@ nav li {
 	margin-bottom: 1em;
 }
 
+/* change for the portfolio */
 .change__wrapper--project {
 	display: flex;
 	justify-content: center;
@@ -264,7 +282,9 @@ nav li {
 #change__portfolio {
 	margin-left: 32px;
 }
+/* end change for the portfolio */
 
+/* categories menu */
 .category__wrapper {
 	gap: 8px;
 }
@@ -280,7 +300,9 @@ nav li {
 	color: white;
 	background-color: #1D6154;
 }
+/* end of categories menu */
 
+/* gallery */
 .gallery {
 	width: 100%;
 	display: grid;
@@ -296,6 +318,8 @@ nav li {
 .pictures__description {
 	margin-top: 8px;
 }
+/* end of gallery */
+
 #contact {
 	width: 50%;
 margin: auto;
@@ -339,7 +363,7 @@ input[type="submit"]{
 	border-radius: 60px;
 }
 
-#footer {
+.footer {
 	background-color: #FFFFFF;
 	padding: 24px 0px;
 }
@@ -350,3 +374,98 @@ footer nav ul {
 	margin: 2em;
 }
 
+/* generic modal css */
+.modal__gallery--wrapper {
+	border: 0px;
+    border-radius: 10px;
+	padding: 0px;
+}
+
+.modal__gallery {
+	display: flex;
+    flex-direction: column;
+	width: 630px;
+	height: 730px;
+}
+
+.modal__closingIcon:before {
+	display: flex;
+    justify-content: flex-end;
+	font-size: 24px;
+	padding: 32px 32px 0px 0px;
+}
+
+.modal__title {
+	font-family: 'Work Sans';
+    font-size: 26px;
+    color: #000;
+    display: flex;
+    justify-content: center;
+	margin-bottom: 48px;
+}
+
+.gallery--small {
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0px 100px;
+	margin-bottom: 48px;
+}
+
+.modal__trashIconWrapper {
+	display: flex;
+    justify-content: flex-end;
+	position: absolute;
+}
+
+.modal__trashIcon, .modal__moveIcon {
+	color: #FFFFFF;
+	border: 1px solid #000;
+    background-color: #000;
+    padding: 4px;
+    border-radius: 2px;
+	margin-top: 8px;
+}
+
+.modal__trashIcon {
+	margin-left: 48px;
+}
+
+.modal__moveIcon { 
+	display: flex;
+    position: absolute;
+	margin-left: 20px;
+}
+
+.modal__pictures {
+	width: 78px;
+	height: 104px;
+}
+
+.modal__ligne {
+	display: flex;
+	align-self: center;
+	border: 1px solid #B3B3B3;
+	width: 420px;
+}
+
+.modal__buttonWrapper {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal__button {
+	padding: 8px 48px;
+	margin: 40px 0px 24px 0px;
+}
+
+.modal__deleteText {
+	color: #D65353;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+/* end of generic modal css */

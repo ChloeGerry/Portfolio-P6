@@ -1,3 +1,4 @@
+// call API to get back the works
 fetch("http://localhost:5678/api/works")
     .then((result) => {
         if (result.ok) {
@@ -7,11 +8,13 @@ fetch("http://localhost:5678/api/works")
     .then((works) => {
         worksData = works;
         updateWorks(worksData);
+        manipulateWorks(worksData);
     })
     .catch((error) => {
         console.log(error);
     });
 
+// call API to get back the categories
 fetch("http://localhost:5678/api/categories")
     .then((result) => {
         if (result.ok) {
@@ -32,10 +35,9 @@ let apartments = null;
 let hostelsAndRestaurants = null;
 let worksData = null;
 let categoriesData = null;
+const gallery = document.querySelector(".js-gallery");
 
-const updateWorks = (worksData) => {
-    const gallery = document.querySelector(".js-gallery");
-    
+const updateWorks = (worksData) => { 
     worksData.forEach(work => {
         const figure = document.createElement("figure");
         gallery.appendChild(figure);
@@ -45,8 +47,29 @@ const updateWorks = (worksData) => {
     })
 }
 
+// selection of the DOM
+const body = document.querySelector(".js-body");
+const headerNavigation = document.querySelectorAll(".js-header__navigation");
+const loginNavigation = headerNavigation[2];
+const loginWrapper = document.querySelector(".js-login");
+const mainContent = document.querySelector(".js-main__content");
+const input = document.querySelectorAll("form input");
+const emailLabel = document.querySelector(".js-emailLabel");
+const emailInput = document.querySelector(".js-emailInput");
+const passwordLabel = document.querySelector(".js-passwordLabel");
+const passwordInput = document.querySelector(".js-passwordInput");
+const submitButton = document.querySelector(".js-loginButton");
+const changeBanner = document.querySelector(".js-change__banner");
+const modificationLinks = document.querySelectorAll(".js-change__wrapper");
+const modalGallery = document.querySelector(".js-modal__gallery");
+const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
+const addPictureButton = document.querySelector(".js-modal--addPicture");
+const modalForAddPicture = document.querySelector(".js-modal__addPicture");
+
+// modalForAddPicture.style.display = "initial";
+
+// filter the works by categories
 const updateCategories = (categories) => {
-    const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
     const list = document.createElement("ul");
     list.classList.add("category__wrapper");
     navigationMenuProjects.appendChild(list);
@@ -75,7 +98,6 @@ const updateCategories = (categories) => {
         resetColor();
         allWorks.style.color = "#FFFFFF";
         allWorks.style.backgroundColor = "#1D6154";
-        const gallery = document.querySelector(".js-gallery");
         gallery.innerHTML = "";
         updateWorks(worksData);
     })
@@ -87,7 +109,6 @@ const updateCategories = (categories) => {
         const filterObjects = worksData.filter(function (work) {
             return work.categoryId === 1;
         })
-        const gallery = document.querySelector(".js-gallery");
         gallery.innerHTML = "";
         updateWorks(filterObjects);
     })
@@ -99,7 +120,6 @@ const updateCategories = (categories) => {
         const filterApartments = worksData.filter(function (work) {
             return work.categoryId === 2;
         })
-        const gallery = document.querySelector(".js-gallery");
         gallery.innerHTML = "";
         updateWorks(filterApartments);
     })
@@ -111,25 +131,26 @@ const updateCategories = (categories) => {
         const filterHostelsAndRestaurants = worksData.filter(function (work) {
             return work.categoryId === 3;
         })
-        const gallery = document.querySelector(".js-gallery");
         gallery.innerHTML = "";
         updateWorks(filterHostelsAndRestaurants);
     })
 }
 
-const headerNavigation = document.querySelectorAll(".js-header__navigation");
-const loginNavigation = headerNavigation[2];
-const loginWrapper = document.querySelector(".js-login");
-const mainContent = document.querySelector(".js-main__content");
-const input = document.querySelectorAll("form input");
-const emailLabel = document.querySelector(".js-emailLabel");
-const emailInput = document.querySelector(".js-emailInput");
-const passwordLabel = document.querySelector(".js-passwordLabel");
-const passwordInput = document.querySelector(".js-passwordInput");
-const submitButton = document.querySelector(".js-loginButton");
-const changeBanner = document.querySelector(".js-change__banner");
-const modificationLinks = document.querySelectorAll(".js-change__wrapper");
+// function for add the works in the modale
+const manipulateWorks = (worksData) => {
+    const modalPicturesGallery = document.querySelector(".js-gallery--small");
 
+    worksData.forEach(work => {
+        const figure = document.createElement("figure");
+        modalPicturesGallery.appendChild(figure);
+        figure.innerHTML = 
+        `<div class="modal__trashIconWrapper"><i class="fa-regular fa-trash-can modal__trashIcon"></i></div>
+        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
+        <figcaption class="modal__editing">éditer</figcaption>`;
+    })
+}
+
+// login page connexion & call API to send data
 loginNavigation.addEventListener("click", () => {
     loginNavigation.style.fontWeight = "600";
     loginWrapper.style.display = "initial";
@@ -162,6 +183,11 @@ const loginSubmit = () => {
                 mainContent.style.display = "initial";
                 changeBanner.style.display = "initial";
                 loginNavigation.innerText = "logout";
+                navigationMenuProjects.style.display = "none";
+                gallery.style.marginTop = "64px";
+                // document.querySelector(".js-fullContent").style.opacity = "0.5"
+                body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+                modalGallery.style.display = "initial";
                 emailLabel.innerText = "";
                 passwordLabel.innerText = "";
                 for (let i = 0; i < modificationLinks.length; i++) {
@@ -192,6 +218,12 @@ const loginSubmit = () => {
 }
 
 loginSubmit();
+
+// modale for adding a picture
+addPictureButton.addEventListener("click", () => {
+    modalForAddPicture.style.display = "initial";
+    modalGallery.style.display = "none";
+})
 
 // compte test : 
 // email = sophie.bluel@test.tld
