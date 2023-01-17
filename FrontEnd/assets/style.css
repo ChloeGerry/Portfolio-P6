@@ -376,6 +376,8 @@ footer nav ul {
 
 /* generic modal css */
 .modal__gallery--wrapper {
+	position: absolute;
+	top: 660px;
 	border: 0px;
     border-radius: 10px;
 	padding: 0px;
@@ -393,6 +395,7 @@ footer nav ul {
     justify-content: flex-end;
 	font-size: 24px;
 	padding: 32px 32px 0px 0px;
+	cursor: pointer;
 }
 
 .modal__title {
@@ -427,6 +430,7 @@ footer nav ul {
     padding: 4px;
     border-radius: 2px;
 	margin-top: 8px;
+	cursor: pointer;
 }
 
 .modal__trashIcon {

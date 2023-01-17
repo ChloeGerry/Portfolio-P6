@@ -65,6 +65,8 @@ const modalGallery = document.querySelector(".js-modal__gallery");
 const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
 const addPictureButton = document.querySelector(".js-modal--addPicture");
 const modalForAddPicture = document.querySelector(".js-modal__addPicture");
+const closeIcon = document.querySelector(".js-modal__closingIcon");
+// const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
 
 // modalForAddPicture.style.display = "initial";
 
@@ -137,6 +139,7 @@ const updateCategories = (categories) => {
 }
 
 // function for add the works in the modale
+let token = "";
 const manipulateWorks = (worksData) => {
     const modalPicturesGallery = document.querySelector(".js-gallery--small");
 
@@ -144,10 +147,50 @@ const manipulateWorks = (worksData) => {
         const figure = document.createElement("figure");
         modalPicturesGallery.appendChild(figure);
         figure.innerHTML = 
-        `<div class="modal__trashIconWrapper"><i class="fa-regular fa-trash-can modal__trashIcon"></i></div>
+        `<div class="modal__trashIconWrapper">
+            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon"></i>
+        </div>
         <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
         <figcaption class="modal__editing">éditer</figcaption>`;
     })
+    const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
+    let workToDelete = 0;
+    for (let i = 0; i < deleteIcon.length; i++) {
+        deleteIcon[i].addEventListener("click", () => {
+            worksData.forEach(work => {
+                console.log("boucle");
+                console.log(work);
+                if (i === work) {
+                    console.log("if");
+                    workToDelete = work;
+                    console.log(workToDelete);
+                    fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                        .then((result) => {
+                            console.log(result);
+                            if (result.ok) {
+                                console.log("je fonctionne");
+                                // updateWorks(worksData);
+                                // manipulateWorks(worksData);
+                            }
+                        })
+                        // .then((works) => {
+                        //     worksData = works;
+                        //     updateWorks(worksData);
+                        //     manipulateWorks(worksData);
+                        // })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+            })
+        })
+    }
 }
 
 // login page connexion & call API to send data
@@ -175,55 +218,72 @@ const loginSubmit = () => {
             },
             body: chargeUtile
         })
-
-        .then((result) => {
-            if (result.ok) {
-                loginNavigation.style.fontWeight = "400";
-                loginWrapper.style.display = "none";
-                mainContent.style.display = "initial";
-                changeBanner.style.display = "initial";
-                loginNavigation.innerText = "logout";
-                navigationMenuProjects.style.display = "none";
-                gallery.style.marginTop = "64px";
-                // document.querySelector(".js-fullContent").style.opacity = "0.5"
-                body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-                modalGallery.style.display = "initial";
-                emailLabel.innerText = "";
-                passwordLabel.innerText = "";
-                for (let i = 0; i < modificationLinks.length; i++) {
-                    modificationLinks[i].style.display = "initial";
+            .then((result) => {
+                if (result.ok) {
+                    loginNavigation.style.fontWeight = "400";
+                    loginWrapper.style.display = "none";
+                    mainContent.style.display = "initial";
+                    changeBanner.style.display = "initial";
+                    loginNavigation.innerText = "logout";
+                    navigationMenuProjects.style.display = "none";
+                    gallery.style.marginTop = "64px";
+                    // document.querySelector(".js-fullContent").style.opacity = "0.5"
+                    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+                    modalGallery.style.display = "initial";
+                    emailLabel.innerText = "";
+                    passwordLabel.innerText = "";
+                    for (let i = 0; i < modificationLinks.length; i++) {
+                        modificationLinks[i].style.display = "initial";
+                    }
+                    return result.json();
                 }
-                return result.json();
-            }
-            if (result.status === 404) {
-                passwordLabel.innerText = "";
-                emailLabel.innerText = "Adresse email invalide !";
-                emailLabel.style.margin = "8px 0px 32px 0px";
-                emailInput.style.marginBottom = "0px";
-            } else if (result.status === 401) {
-                emailLabel.innerText = "";
-                passwordLabel.innerText = "Mot de passe invalide !";
-                passwordLabel.style.margin = "8px 0px 32px 0px"
-                passwordInput.style.marginBottom = "0px";
-            }
-        })
-        .then((login) => {
-            const token = login.token; 
-            console.log(token);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+                if (result.status === 404) {
+                    passwordLabel.innerText = "";
+                    emailLabel.innerText = "Adresse email invalide !";
+                    emailLabel.style.margin = "8px 0px 32px 0px";
+                    emailInput.style.marginBottom = "0px";
+                } else if (result.status === 401) {
+                    emailLabel.innerText = "";
+                    passwordLabel.innerText = "Mot de passe invalide !";
+                    passwordLabel.style.margin = "8px 0px 32px 0px"
+                    passwordInput.style.marginBottom = "0px";
+                }
+            })
+            .then((login) => {
+                token = login.token;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     });
 }
 
 loginSubmit();
 
-// modale for adding a picture
-addPictureButton.addEventListener("click", () => {
-    modalForAddPicture.style.display = "initial";
+//for closing the modal
+closeIcon.addEventListener("click", () => {
     modalGallery.style.display = "none";
+    body.style.backgroundColor = "#FFFEF8";
+
 })
+
+mainContent.addEventListener("click", () => {
+    modalGallery.style.display = "none";
+    body.style.backgroundColor = "#FFFEF8";
+})
+
+//delete a work
+// deleteIcon.addEventListener("click", () => {
+//     console.log("delete");
+// })
+
+
+
+// modale for adding a picture
+// addPictureButton.addEventListener("click", () => {
+//     modalForAddPicture.style.display = "initial";
+//     modalGallery.style.display = "none";
+// })
 
 // compte test : 
 // email = sophie.bluel@test.tld

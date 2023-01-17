@@ -22,7 +22,25 @@
 				</button>
 			</div>
 		</div>
-		<div class="fullContent js-fullContent">
+		<dialog class="modal__gallery--wrapper js-modal__gallery">
+			<div class="modal__gallery">
+				<i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+				<h2 class="modal__title">Galerie photo</h2>
+				<div class="gallery--small js-gallery--small">
+					<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>
+				</div>
+				<div class="modal__ligne"></div>
+				<div class="modal__buttonWrapper">
+					<button type="button" class="button modal__button js-modal--addPicture">
+						Ajouter une photo
+					</button>
+					<a href="#" class="modal__deleteText">
+						Supprimer la galerie
+					</a>
+				</div>
+			</div>
+		</dialog>
+		<div class="fullContent">
 			<header>
 				<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 				<nav>
@@ -34,51 +52,33 @@
 					</ul>
 				</nav>
 			</header>
-			<main>
-				<section class="login js-login">
-					<div class="login__wrapper">
-						<h2>Log In</h2>
-						<form method="post" class="login__form js-login__form">
-							<label for="ownerEmail" class="login__text">
-								E-mail
-							</label>
-							<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" required />
-							<div class="js-emailLabel"></div>
-							<label for="password" class="login__text">
-								Mot de passe
-							</label>
-							<input type="password" id="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" required />
-							<div class="js-passwordLabel"></div>
-							<div class="login__buttonWrapper">
-								<button type="submit" class="button login__button js-loginButton">
-									Se connecter
-								</button>
-								<a href="#" class="login__passwordLink">
-									Mot de passe oublié
-								</a>
-							</div>
-						</form>
-					</div>
-				</section>
-				<dialog class="modal__gallery--wrapper js-modal__gallery">
-					<div class="modal__gallery">
-						<i class="fa-solid fa-xmark modal__closingIcon"></i>
-						<h2 class="modal__title">Galerie photo</h2>
-						<div class="gallery--small js-gallery--small">
-							<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>
-						</div>
-						<div class="modal__ligne"></div>
-						<div class="modal__buttonWrapper">
-							<button type="button" class="button modal__button js-modal--addPicture">
-								Ajouter une photo
+			<section class="login js-login">
+				<div class="login__wrapper">
+					<h2>Log In</h2>
+					<form method="post" class="login__form js-login__form">
+						<label for="ownerEmail" class="login__text">
+							E-mail
+						</label>
+						<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" required />
+						<div class="js-emailLabel"></div>
+						<label for="password" class="login__text">
+							Mot de passe
+						</label>
+						<input type="password" id="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" required />
+						<div class="js-passwordLabel"></div>
+						<div class="login__buttonWrapper">
+							<button type="submit" class="button login__button js-loginButton">
+								Se connecter
 							</button>
-							<a href="#" class="modal__deleteText">
-								Supprimer la galerie
+							<a href="#" class="login__passwordLink">
+								Mot de passe oublié
 							</a>
 						</div>
-					</div>
-				</dialog>
-				<dialog class="modal__gallery--wrapper js-modal__addPicture">
+					</form>
+				</div>
+			</section>
+			<main id="main">
+				<!-- <dialog class="modal__gallery--wrapper js-modal__addPicture">
 					<div class="modal__gallery">
 						<i class="fa-solid fa-arrow-left-long"></i>
 						<i class="fa-solid fa-xmark modal__closingIcon"></i>
@@ -110,7 +110,7 @@
 							Valider
 						</button>
 					</div>
-				</dialog>
+				</dialog> -->
 				<div class="js-main__content">
 					<section id="introduction">
 						<figure>
