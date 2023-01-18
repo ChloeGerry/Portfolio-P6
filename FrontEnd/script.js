@@ -40,6 +40,7 @@ const gallery = document.querySelector(".js-gallery");
 const updateWorks = (worksData) => { 
     worksData.forEach(work => {
         const figure = document.createElement("figure");
+        figure.setAttribute("data-id", `${work.id}`);
         gallery.appendChild(figure);
         figure.innerHTML = 
         `<img class="js-pictures" crossorigin="anonymous" src="${work.imageUrl}" />
@@ -66,9 +67,9 @@ const navigationMenuProjects = document.querySelector(".js-navigationMenu--proje
 const addPictureButton = document.querySelector(".js-modal--addPicture");
 const modalForAddPicture = document.querySelector(".js-modal__addPicture");
 const closeIcon = document.querySelector(".js-modal__closingIcon");
-// const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
+const changePortfolio = document.querySelector("#change__portfolio");
 
-// modalForAddPicture.style.display = "initial";
+// const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
 
 // filter the works by categories
 const updateCategories = (categories) => {
@@ -140,30 +141,28 @@ const updateCategories = (categories) => {
 
 // function for add the works in the modale
 let token = "";
+const modalPicturesGallery = document.querySelector(".js-gallery--small");
 const manipulateWorks = (worksData) => {
-    const modalPicturesGallery = document.querySelector(".js-gallery--small");
-
     worksData.forEach(work => {
         const figure = document.createElement("figure");
+        figure.setAttribute("data-id", `${work.id}`);
         modalPicturesGallery.appendChild(figure);
         figure.innerHTML = 
         `<div class="modal__trashIconWrapper">
-            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon"></i>
+            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${work.id}"></i>
         </div>
         <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
         <figcaption class="modal__editing">éditer</figcaption>`;
     })
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
     let workToDelete = 0;
+    let deleteIconId = 0;
     for (let i = 0; i < deleteIcon.length; i++) {
         deleteIcon[i].addEventListener("click", () => {
             worksData.forEach(work => {
-                console.log("boucle");
-                console.log(work);
-                if (i === work) {
-                    console.log("if");
-                    workToDelete = work;
-                    console.log(workToDelete);
+                deleteIconId = parseInt(deleteIcon[i].dataset.id);
+                if (work.id === deleteIconId) {
+                    workToDelete = work.id;
                     fetch(`http://localhost:5678/api/works/${workToDelete}`, {
                         method: "DELETE",
                         headers: {
@@ -174,16 +173,12 @@ const manipulateWorks = (worksData) => {
                         .then((result) => {
                             console.log(result);
                             if (result.ok) {
-                                console.log("je fonctionne");
-                                // updateWorks(worksData);
-                                // manipulateWorks(worksData);
+                                const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                                refreshPortfolioModale.remove();
+                                const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                                refreshPortfolio.remove();
                             }
                         })
-                        // .then((works) => {
-                        //     worksData = works;
-                        //     updateWorks(worksData);
-                        //     manipulateWorks(worksData);
-                        // })
                         .catch((error) => {
                             console.log(error);
                         });
@@ -192,6 +187,12 @@ const manipulateWorks = (worksData) => {
         })
     }
 }
+
+//delete a work
+// const deleteWork = () => {
+//     const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
+//     refreshPortfolio.remove();
+// }
 
 // login page connexion & call API to send data
 loginNavigation.addEventListener("click", () => {
@@ -227,14 +228,12 @@ const loginSubmit = () => {
                     loginNavigation.innerText = "logout";
                     navigationMenuProjects.style.display = "none";
                     gallery.style.marginTop = "64px";
-                    // document.querySelector(".js-fullContent").style.opacity = "0.5"
-                    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-                    modalGallery.style.display = "initial";
                     emailLabel.innerText = "";
                     passwordLabel.innerText = "";
                     for (let i = 0; i < modificationLinks.length; i++) {
                         modificationLinks[i].style.display = "initial";
                     }
+                    openingTheModal();
                     return result.json();
                 }
                 if (result.status === 404) {
@@ -260,6 +259,18 @@ const loginSubmit = () => {
 
 loginSubmit();
 
+//open the modal
+const openingTheModal = () => {
+    modalGallery.style.display = "initial";
+}
+
+changePortfolio.addEventListener("click", () => {
+    console.log("je passe dans le addEventListener");
+    // document.querySelector(".js-fullContent").style.opacity = "0.5"
+    openingTheModal();
+    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+})
+
 //for closing the modal
 closeIcon.addEventListener("click", () => {
     modalGallery.style.display = "none";
@@ -271,13 +282,6 @@ mainContent.addEventListener("click", () => {
     modalGallery.style.display = "none";
     body.style.backgroundColor = "#FFFEF8";
 })
-
-//delete a work
-// deleteIcon.addEventListener("click", () => {
-//     console.log("delete");
-// })
-
-
 
 // modale for adding a picture
 // addPictureButton.addEventListener("click", () => {
