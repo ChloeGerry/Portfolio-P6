@@ -64,11 +64,8 @@ const changeBanner = document.querySelector(".js-change__banner");
 const modificationLinks = document.querySelectorAll(".js-change__wrapper");
 const modalGallery = document.querySelector(".js-modal__gallery");
 const modalPicturesGallery = document.querySelector(".js-gallery--small");
-const changePortfolio = document.querySelector("#change__portfolio");
 const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
-const addPictureButton = document.querySelector(".js-modal--addPicture");
-const modalForAddPicture = document.querySelector(".js-modal__addPicture");
-const closeIcon = document.querySelector(".js-modal__closingIcon");
+// const closeIcon = document.querySelector(".js-modal__closingIcon");
 
 // filter the works by categories
 const updateCategories = (categories) => {
@@ -138,18 +135,110 @@ const updateCategories = (categories) => {
     })
 }
 
+// login page connexion & call API to send data for the authentification
+loginNavigation.addEventListener("click", () => {
+    loginNavigation.style.fontWeight = "600";
+    loginWrapper.style.display = "initial";
+    mainContent.style.display = "none";
+})
+
+let token = "";
+const loginSubmit = () => {
+    const userLogin = document.querySelector(".js-login__form");
+    userLogin.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const login = {
+            email: emailInput.value,
+            password: passwordInput.value
+        };
+        const chargeUtile = JSON.stringify(login);
+
+        fetch("http://localhost:5678/api/users/login", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: chargeUtile
+        })
+            .then((result) => {
+                if (result.ok) {
+                    loginNavigation.style.fontWeight = "400";
+                    loginWrapper.style.display = "none";
+                    mainContent.style.display = "initial";
+                    changeBanner.style.display = "initial";
+                    loginNavigation.innerText = "logout";
+                    navigationMenuProjects.style.display = "none";
+                    gallery.style.marginTop = "64px";
+                    emailLabel.innerText = "";
+                    passwordLabel.innerText = "";
+                    for (let i = 0; i < modificationLinks.length; i++) {
+                        modificationLinks[i].style.display = "initial";
+                    }
+                    modalGallery.style.display = "initial";
+                    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+                    // openingTheModal();
+                    return result.json();
+                }
+                if (result.status === 404) {
+                    passwordLabel.innerText = "";
+                    emailLabel.innerText = "Adresse email invalide !";
+                    emailLabel.style.margin = "8px 0px 32px 0px";
+                    emailInput.style.marginBottom = "0px";
+                } else if (result.status === 401) {
+                    emailLabel.innerText = "";
+                    passwordLabel.innerText = "Mot de passe invalide !";
+                    passwordLabel.style.margin = "8px 0px 32px 0px"
+                    passwordInput.style.marginBottom = "0px";
+                }
+            })
+            .then((login) => {
+                token = login.token;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    });
+}
+
+loginSubmit();
+
 //open the modal
 const openingTheModal = () => {
     console.log("fonction");
-    modalGallery.style.display = "initial";
-    // body.style.opacity = "0.6";
-    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    const changePortfolio = document.querySelector("#change__portfolio");
+    changePortfolio.addEventListener("click", () => {
+        console.log("click");
+        modalGallery.style.display = "initial";
+        // body.style.opacity = "0.6";
+        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    })
 }
 
-changePortfolio.addEventListener("click", () => {
-    console.log("addEventListener");
-    openingTheModal();
-})
+// function for the modal header
+const modalHeader = () => {
+    modalGallery.innerHTML =
+    `<div class="modal">
+        <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+        <h2 class="modal__title">Galerie photo</h2>
+    </div>`;
+
+    modalPicturesGallery.innerHTML = `<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>`;
+}
+
+// function for the modal footer
+const modalFooter = () => {
+    modalGallery.innerHTML = modalGallery.innerHTML +
+    `<div class="modal__buttonWrapper">
+        <div class="modal__ligne"></div>
+        <button type="button" class="button modal__button js-button__addPicture--open">
+            Ajouter une photo
+        </button>
+        <a href="#" class="modal__deleteText">
+            Supprimer la galerie
+        </a>
+    </div>`;
+}
 
 // function for delete a work
 const deleteWork = () => {
@@ -186,29 +275,64 @@ const deleteWork = () => {
     }
 }
 
-// function for the modal header
-const modalHeader = () => {
+const modalAddPicture = () => {
     modalGallery.innerHTML =
-    `<div class="modal__gallery">
-        <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
-        <h2 class="modal__title">Galerie photo</h2>
+    `<div class="modal">
+        <div class="modal__header">
+            <i class="fa-solid fa-arrow-left-long modal__leftArrowIcon js-modal__leftArrowIcon"></i>
+            <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+        </div>
+        <h2 class="modal__title">Ajout photo</h2>
+        <div class="modal__addPictureWrapper">
+            <img src="../FrontEnd/assets/icons/landscape.svg" alt="Image icon" class="modal__landscapeIcon" />
+            <button type="button" class="button modal__addPicture--button js-modal__addPicture--button">
+                + Ajouter photo
+            </button>
+            <p class="modal__imageFormat">jpg, png : 4mo max</p>
+        </div>
+        <form method="post" class="modal__form">
+            <label for="title" class="modal__pictureTitle">
+                Titre
+            </label>
+            <input type="text" id="title" class="modal__pictureTitleInput" />
+            <label for="categorie" class="modal__pictureCategory">
+            Catégorie
+            </label>
+            <select id="categorie" class="modal__pictureCategoryInput">
+                <option>Tous</option>
+                <option>Objets</option>
+                <option>Appartements</option>
+                <option>Hôtels & restaurants</option>
+            </select>
+        </form>
+        <div class="modal__addPictureFooter">
+            <div class="modal__ligne"></div>
+            <button type="submit" class="button modal__buttonSubmitPicture js-modal__buttonSubmitPicture">
+                Valider
+            </button>
+        </div>
     </div>`;
-
-    modalPicturesGallery.innerHTML = `<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>`;
+    const submitPictureButton = document.querySelector(".js-modal__buttonSubmitPicture");
+    submitPictureButton.disabled = "true";
 }
 
-// function for the modal footer
-const modalFooter = () => {
-    modalGallery.innerHTML = modalGallery.innerHTML +
-    `<div class="modal__buttonWrapper">
-        <div class="modal__ligne"></div>
-        <button type="button" class="button modal__button js-modal--addPicture">
-            Ajouter une photo
-        </button>
-        <a href="#" class="modal__deleteText">
-            Supprimer la galerie
-        </a>
-    </div>`;
+// return to the previous modal
+const previousModale = () => {
+    const leftArrow = document.querySelector(".js-modal__leftArrowIcon");
+    leftArrow.addEventListener("click", () => {
+        modalGallery.innerHTML = "";
+        updateModalWorks(worksData);
+    })
+}
+
+// modale for adding a picture
+const addPictureModalFunction = () => {
+    const addPictureModal = document.querySelector(".js-button__addPicture--open");
+    addPictureModal.addEventListener("click", () => {
+        modalGallery.innerHTML = "";
+        modalAddPicture();
+        previousModale();
+    })
 }
 
 // function for update the works in the modale 
@@ -228,90 +352,23 @@ const updateModalWorks = (worksData) => {
     })
     modalFooter();
     deleteWork();
+    closingModale();
+    addPictureModalFunction();
 }
 
-// login page connexion & call API to send data for the authentification
-let token = "";
-loginNavigation.addEventListener("click", () => {
-    loginNavigation.style.fontWeight = "600";
-    loginWrapper.style.display = "initial";
-    mainContent.style.display = "none";
-})
-
-const loginSubmit = () => {
-    const userLogin = document.querySelector(".js-login__form");
-    userLogin.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const login = {
-            email: emailInput.value,
-            password: passwordInput.value
-        };
-        const chargeUtile = JSON.stringify(login);
-
-        fetch("http://localhost:5678/api/users/login", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: chargeUtile
-        })
-            .then((result) => {
-                if (result.ok) {
-                    loginNavigation.style.fontWeight = "400";
-                    loginWrapper.style.display = "none";
-                    mainContent.style.display = "initial";
-                    changeBanner.style.display = "initial";
-                    loginNavigation.innerText = "logout";
-                    navigationMenuProjects.style.display = "none";
-                    gallery.style.marginTop = "64px";
-                    emailLabel.innerText = "";
-                    passwordLabel.innerText = "";
-                    for (let i = 0; i < modificationLinks.length; i++) {
-                        modificationLinks[i].style.display = "initial";
-                    }
-                    openingTheModal();
-                    return result.json();
-                }
-                if (result.status === 404) {
-                    passwordLabel.innerText = "";
-                    emailLabel.innerText = "Adresse email invalide !";
-                    emailLabel.style.margin = "8px 0px 32px 0px";
-                    emailInput.style.marginBottom = "0px";
-                } else if (result.status === 401) {
-                    emailLabel.innerText = "";
-                    passwordLabel.innerText = "Mot de passe invalide !";
-                    passwordLabel.style.margin = "8px 0px 32px 0px"
-                    passwordInput.style.marginBottom = "0px";
-                }
-            })
-            .then((login) => {
-                token = login.token;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    });
+// for closing the modal
+const closingModale = () => {
+    const closeIcon = document.querySelector(".js-modal__closingIcon");
+    closeIcon.addEventListener("click", () => {
+        modalGallery.style.display = "none";
+        body.style.backgroundColor = "#FFFEF8";
+    })
 }
-
-loginSubmit();
-
-//for closing the modal
-// closeIcon.addEventListener("click", () => {
-//     modalGallery.style.display = "none";
-//     body.style.backgroundColor = "#FFFEF8";
-// })
 
 mainContent.addEventListener("click", () => {
     modalGallery.style.display = "none";
     body.style.backgroundColor = "#FFFEF8";
 })
-
-// modale for adding a picture
-// addPictureButton.addEventListener("click", () => {
-//     modalForAddPicture.style.display = "initial";
-//     modalGallery.style.display = "none";
-// })
 
 // compte test : 
 // email = sophie.bluel@test.tld
