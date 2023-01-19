@@ -8,7 +8,7 @@ fetch("http://localhost:5678/api/works")
     .then((works) => {
         worksData = works;
         updateWorks(worksData);
-        manipulateWorks(worksData);
+        updateModalWorks(worksData);
     })
     .catch((error) => {
         console.log(error);
@@ -63,13 +63,12 @@ const submitButton = document.querySelector(".js-loginButton");
 const changeBanner = document.querySelector(".js-change__banner");
 const modificationLinks = document.querySelectorAll(".js-change__wrapper");
 const modalGallery = document.querySelector(".js-modal__gallery");
+const modalPicturesGallery = document.querySelector(".js-gallery--small");
+const changePortfolio = document.querySelector("#change__portfolio");
 const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
 const addPictureButton = document.querySelector(".js-modal--addPicture");
 const modalForAddPicture = document.querySelector(".js-modal__addPicture");
 const closeIcon = document.querySelector(".js-modal__closingIcon");
-const changePortfolio = document.querySelector("#change__portfolio");
-
-// const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
 
 // filter the works by categories
 const updateCategories = (categories) => {
@@ -139,21 +138,21 @@ const updateCategories = (categories) => {
     })
 }
 
-// function for add the works in the modale
-let token = "";
-const modalPicturesGallery = document.querySelector(".js-gallery--small");
-const manipulateWorks = (worksData) => {
-    worksData.forEach(work => {
-        const figure = document.createElement("figure");
-        figure.setAttribute("data-id", `${work.id}`);
-        modalPicturesGallery.appendChild(figure);
-        figure.innerHTML = 
-        `<div class="modal__trashIconWrapper">
-            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${work.id}"></i>
-        </div>
-        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
-        <figcaption class="modal__editing">éditer</figcaption>`;
-    })
+//open the modal
+const openingTheModal = () => {
+    console.log("fonction");
+    modalGallery.style.display = "initial";
+    // body.style.opacity = "0.6";
+    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+}
+
+changePortfolio.addEventListener("click", () => {
+    console.log("addEventListener");
+    openingTheModal();
+})
+
+// function for delete a work
+const deleteWork = () => {
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
     let workToDelete = 0;
     let deleteIconId = 0;
@@ -171,7 +170,6 @@ const manipulateWorks = (worksData) => {
                         }
                     })
                         .then((result) => {
-                            console.log(result);
                             if (result.ok) {
                                 const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDelete}"]`);
                                 refreshPortfolioModale.remove();
@@ -188,13 +186,52 @@ const manipulateWorks = (worksData) => {
     }
 }
 
-//delete a work
-// const deleteWork = () => {
-//     const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
-//     refreshPortfolio.remove();
-// }
+// function for the modal header
+const modalHeader = () => {
+    modalGallery.innerHTML =
+    `<div class="modal__gallery">
+        <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+        <h2 class="modal__title">Galerie photo</h2>
+    </div>`;
 
-// login page connexion & call API to send data
+    modalPicturesGallery.innerHTML = `<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>`;
+}
+
+// function for the modal footer
+const modalFooter = () => {
+    modalGallery.innerHTML = modalGallery.innerHTML +
+    `<div class="modal__buttonWrapper">
+        <div class="modal__ligne"></div>
+        <button type="button" class="button modal__button js-modal--addPicture">
+            Ajouter une photo
+        </button>
+        <a href="#" class="modal__deleteText">
+            Supprimer la galerie
+        </a>
+    </div>`;
+}
+
+// function for update the works in the modale 
+const updateModalWorks = (worksData) => {
+    modalHeader();
+    modalGallery.appendChild(modalPicturesGallery);
+    worksData.forEach(work => {
+        const figure = document.createElement("figure");
+        figure.setAttribute("data-id", `${work.id}`);
+        modalPicturesGallery.appendChild(figure);
+        figure.innerHTML =
+        `<div class="modal__trashIconWrapper">
+            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${work.id}"></i>
+        </div>
+        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
+        <figcaption class="modal__editing">éditer</figcaption>`;
+    })
+    modalFooter();
+    deleteWork();
+}
+
+// login page connexion & call API to send data for the authentification
+let token = "";
 loginNavigation.addEventListener("click", () => {
     loginNavigation.style.fontWeight = "600";
     loginWrapper.style.display = "initial";
@@ -259,24 +296,11 @@ const loginSubmit = () => {
 
 loginSubmit();
 
-//open the modal
-const openingTheModal = () => {
-    modalGallery.style.display = "initial";
-}
-
-changePortfolio.addEventListener("click", () => {
-    console.log("je passe dans le addEventListener");
-    // document.querySelector(".js-fullContent").style.opacity = "0.5"
-    openingTheModal();
-    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-})
-
 //for closing the modal
-closeIcon.addEventListener("click", () => {
-    modalGallery.style.display = "none";
-    body.style.backgroundColor = "#FFFEF8";
-
-})
+// closeIcon.addEventListener("click", () => {
+//     modalGallery.style.display = "none";
+//     body.style.backgroundColor = "#FFFEF8";
+// })
 
 mainContent.addEventListener("click", () => {
     modalGallery.style.display = "none";

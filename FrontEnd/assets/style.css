@@ -381,13 +381,13 @@ footer nav ul {
 	border: 0px;
     border-radius: 10px;
 	padding: 0px;
+	width: 630px;
+	height: 730px;
 }
 
 .modal__gallery {
 	display: flex;
     flex-direction: column;
-	width: 630px;
-	height: 730px;
 }
 
 .modal__closingIcon:before {
@@ -410,7 +410,8 @@ footer nav ul {
 .gallery--small {
 	display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+	justify-content: flex-start;
     flex-wrap: wrap;
     gap: 8px;
     padding: 0px 100px;
