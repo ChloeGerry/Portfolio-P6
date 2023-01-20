@@ -377,7 +377,7 @@ footer nav ul {
 /* generic modal css */
 .modal__fullPage {
 	width: 100%;
-	height: 482%;
+	height: 205%;
     position: initial;
     top: 50px;
     left: 0px;
@@ -521,6 +521,7 @@ footer nav ul {
 }
 
 .modal__addPicture--button {
+	font-family: 'Work Sans';
 	padding: 8px 32px;
 	background-color: #CBD6DC;
     border: 1px solid #CBD6DC;
@@ -537,6 +538,14 @@ footer nav ul {
     flex-direction: column;
 	align-items: center;
     margin-bottom: 48px;
+}
+
+.modal__imageLabel {
+	cursor: pointer;
+}
+
+.modal__fileInput {
+	display: none;
 }
 
 .modal__pictureTitle, .modal__pictureCategory {

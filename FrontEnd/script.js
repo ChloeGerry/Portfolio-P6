@@ -201,6 +201,46 @@ const loginSubmit = () => {
 
 loginSubmit();
 
+//add an image 
+const uploadAnImage = () => {
+    const modalForm = document.querySelector(".js-modal__form");
+
+}
+
+const addAnImage = () => {
+    const modalForm = document.querySelector(".js-modal__form");
+    const imageTitle = document.querySelector(".js-modal__pictureTitleInput");
+    const categoryInput = document.querySelector(".js-modal__pictureCategoryInput");
+    modalForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const newImage = {
+            title: imageTitle.value,
+            category: categoryInput.value
+        };
+        const chargeUtile = JSON.stringify(newImage);
+
+        fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "multipart/form-data"
+            },
+            body: chargeUtile
+        })
+            .then((result) => {
+                if (result.ok) {
+                    return result.json();
+                }
+            })
+            .then((newImage) => {
+                token = newImage.token;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    });
+}
+
 //open the modal
 const openingTheModal = () => {
     const changePortfolio = document.querySelector("#change__portfolio");
@@ -300,42 +340,46 @@ const deleteAllGallery = () => {
 }
 
 const modalAddPicture = () => {
+    // <button class="button modal__addPicture--button js-modal__addPicture--button">
+    //      + Ajouter photo
+    // </button>
     modalGallery.innerHTML =
-    `<div class="modal">
-        <div class="modal__header">
-            <i class="fa-solid fa-arrow-left-long modal__leftArrowIcon js-modal__leftArrowIcon"></i>
-            <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
-        </div>
-        <h2 class="modal__title">Ajout photo</h2>
-        <div class="modal__addPictureWrapper">
-            <img src="../FrontEnd/assets/icons/landscape.svg" alt="Image icon" class="modal__landscapeIcon" />
-            <button type="button" class="button modal__addPicture--button js-modal__addPicture--button">
-                + Ajouter photo
-            </button>
-            <p class="modal__imageFormat">jpg, png : 4mo max</p>
-        </div>
-        <form method="post" class="modal__form">
-            <label for="title" class="modal__pictureTitle">
-                Titre
-            </label>
-            <input type="text" id="title" class="modal__pictureTitleInput" />
-            <label for="categorie" class="modal__pictureCategory">
-            Catégorie
-            </label>
-            <select id="categorie" class="modal__pictureCategoryInput">
-                <option>Tous</option>
-                <option>Objets</option>
-                <option>Appartements</option>
-                <option>Hôtels & restaurants</option>
-            </select>
-        </form>
-        <div class="modal__addPictureFooter">
-            <div class="modal__ligne"></div>
-            <button type="submit" class="button modal__buttonSubmitPicture js-modal__buttonSubmitPicture">
-                Valider
-            </button>
-        </div>
-    </div>`;
+        `<div class="modal">
+            <div class="modal__header">
+                <i class="fa-solid fa-arrow-left-long modal__leftArrowIcon js-modal__leftArrowIcon"></i>
+                <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+            </div>
+            <h2 class="modal__title">Ajout photo</h2>
+            <div class="modal__addPictureWrapper">
+                <img src="../FrontEnd/assets/icons/landscape.svg" alt="Image icon" class="modal__landscapeIcon" />
+                <form method="post" class="button modal__addPicture--button js-modal__addPicture--button">
+                    <label for="image" class="modal__imageLabel">+Ajouter photo</label>
+                    <input id="image" type="file" accept=".jpeg, .png, .jpg" class="modal__fileInput" />
+                </form>
+                <p class="modal__imageFormat">jpg, png : 4mo max</p>
+            </div>
+            <form method="post" class="modal__form js-modal__form">
+                <label for="title" class="modal__pictureTitle">
+                    Titre
+                </label>
+                <input type="text" id="title" class="modal__pictureTitleInput js-modal__pictureTitleInput" />
+                <label for="categorie" class="modal__pictureCategory">
+                Catégorie
+                </label>
+                <select id="categorie" class="modal__pictureCategoryInput js-modal__pictureCategoryInput">
+                    <option>Tous</option>
+                    <option>Objets</option>
+                    <option>Appartements</option>
+                    <option>Hôtels & restaurants</option>
+                </select>
+            </form>
+            <div class="modal__addPictureFooter">
+                <div class="modal__ligne"></div>
+                <button type="submit" class="button modal__buttonSubmitPicture js-modal__buttonSubmitPicture">
+                    Valider
+                </button>
+            </div>
+        </div>`;
     const submitPictureButton = document.querySelector(".js-modal__buttonSubmitPicture");
     submitPictureButton.disabled = "true";
 }
