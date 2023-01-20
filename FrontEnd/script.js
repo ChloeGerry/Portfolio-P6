@@ -9,6 +9,7 @@ fetch("http://localhost:5678/api/works")
         worksData = works;
         updateWorks(worksData);
         updateModalWorks(worksData);
+        openingTheModal();
     })
     .catch((error) => {
         console.log(error);
@@ -52,6 +53,7 @@ const updateWorks = (worksData) => {
 const body = document.querySelector(".js-body");
 const headerNavigation = document.querySelectorAll(".js-header__navigation");
 const loginNavigation = headerNavigation[2];
+const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
 const loginWrapper = document.querySelector(".js-login");
 const mainContent = document.querySelector(".js-main__content");
 const input = document.querySelectorAll("form input");
@@ -62,10 +64,9 @@ const passwordInput = document.querySelector(".js-passwordInput");
 const submitButton = document.querySelector(".js-loginButton");
 const changeBanner = document.querySelector(".js-change__banner");
 const modificationLinks = document.querySelectorAll(".js-change__wrapper");
+const modalBackground = document.querySelector(".js-modal__fullPage");
 const modalGallery = document.querySelector(".js-modal__gallery");
 const modalPicturesGallery = document.querySelector(".js-gallery--small");
-const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
-// const closeIcon = document.querySelector(".js-modal__closingIcon");
 
 // filter the works by categories
 const updateCategories = (categories) => {
@@ -175,9 +176,6 @@ const loginSubmit = () => {
                     for (let i = 0; i < modificationLinks.length; i++) {
                         modificationLinks[i].style.display = "initial";
                     }
-                    modalGallery.style.display = "initial";
-                    body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-                    // openingTheModal();
                     return result.json();
                 }
                 if (result.status === 404) {
@@ -205,13 +203,10 @@ loginSubmit();
 
 //open the modal
 const openingTheModal = () => {
-    console.log("fonction");
     const changePortfolio = document.querySelector("#change__portfolio");
     changePortfolio.addEventListener("click", () => {
-        console.log("click");
         modalGallery.style.display = "initial";
-        // body.style.opacity = "0.6";
-        body.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        modalBackground.style.position = "absolute";
     })
 }
 
@@ -219,7 +214,9 @@ const openingTheModal = () => {
 const modalHeader = () => {
     modalGallery.innerHTML =
     `<div class="modal">
-        <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+        <div class="modal__closingIconWrapper">
+            <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+        </div>
         <h2 class="modal__title">Galerie photo</h2>
     </div>`;
 
@@ -234,7 +231,7 @@ const modalFooter = () => {
         <button type="button" class="button modal__button js-button__addPicture--open">
             Ajouter une photo
         </button>
-        <a href="#" class="modal__deleteText">
+        <a href="#" class="modal__deleteText js-modal__deleteAllGallery">
             Supprimer la galerie
         </a>
     </div>`;
@@ -273,6 +270,33 @@ const deleteWork = () => {
             })
         })
     }
+}
+
+const deleteAllGallery = () => {
+    const deleteAll = document.querySelector(".js-modal__deleteAllGallery");
+    let workToDelete = 0;
+    deleteAll.addEventListener("click", () => {
+        worksData.forEach(work => {
+            workToDelete = work.id;
+            fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+                .then((result) => {
+                    if (result.ok) {
+                        const modalPicturesGallery = document.querySelector(".js-gallery--small");
+                        modalPicturesGallery.innerHTML = "";
+                        gallery.innerHTML = "";
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        })
+    })
 }
 
 const modalAddPicture = () => {
@@ -352,6 +376,7 @@ const updateModalWorks = (worksData) => {
     })
     modalFooter();
     deleteWork();
+    deleteAllGallery();
     closingModale();
     addPictureModalFunction();
 }
@@ -361,13 +386,13 @@ const closingModale = () => {
     const closeIcon = document.querySelector(".js-modal__closingIcon");
     closeIcon.addEventListener("click", () => {
         modalGallery.style.display = "none";
-        body.style.backgroundColor = "#FFFEF8";
+        modalBackground.style.position = "initial";
     })
 }
 
-mainContent.addEventListener("click", () => {
+modalBackground.addEventListener("click", () => {
     modalGallery.style.display = "none";
-    body.style.backgroundColor = "#FFFEF8";
+    modalBackground.style.position = "initial";
 })
 
 // compte test : 
