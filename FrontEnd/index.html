@@ -46,15 +46,15 @@
 						<label for="ownerEmail" class="login__text">
 							E-mail
 						</label>
-						<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" required />
+						<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" name="email" required />
 						<div class="js-emailLabel"></div>
 						<label for="password" class="login__text">
 							Mot de passe
 						</label>
-						<input type="password" id="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" required />
+						<input type="password" id="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" name="password" required />
 						<div class="js-passwordLabel"></div>
 						<div class="login__buttonWrapper">
-							<button type="submit" class="button login__button js-loginButton">
+							<button type="submit" class="button login__button">
 								Se connecter
 							</button>
 							<a href="#" class="login__passwordLink">
@@ -70,18 +70,18 @@
 						<figure>
 							<img src="./assets/images/sophie-bluel.png" alt="Picture of Sophie Bluel">
 							<div class="change__wrapper js-change__wrapper">
-								<a class="change__wrapperLink" id="change__picture">
+								<div class="change__wrapperLink" id="change__picture">
 									<i class="fa-regular fa-pen-to-square change__icon"></i>
 									<p class="change__text">modifier</p>
-								</a>
+								</div>
 							</div>
 						</figure>
 						<article>
 							<div class="change__wrapper js-change__wrapper">
-								<a class="change__wrapperLink" id="change__description">
+								<div class="change__wrapperLink" id="change__description">
 									<i class="fa-regular fa-pen-to-square change__icon"></i>
 									<p class="change__text">modifier</p>
-								</a>
+								</div>
 							</div>
 							<h2>Designer d'espace</h2>
 							<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
@@ -93,10 +93,10 @@
 						<div class="change__wrapper--project">
 							<h2>Mes Projets</h2>
 							<div class="change__wrapper js-change__wrapper" id="change__portfolio">
-									<a class="change__wrapperLink">
+									<div class="change__wrapperLink">
 										<i class="fa-regular fa-pen-to-square change__icon"></i>
 										<p class="change__text">modifier</p>
-									</a>
+									</div>
 							</div>
 						</div>
 						<nav class="navigationMenu--projects js-navigationMenu--projects"></nav>

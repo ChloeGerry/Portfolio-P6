@@ -61,7 +61,6 @@ const emailLabel = document.querySelector(".js-emailLabel");
 const emailInput = document.querySelector(".js-emailInput");
 const passwordLabel = document.querySelector(".js-passwordLabel");
 const passwordInput = document.querySelector(".js-passwordInput");
-const submitButton = document.querySelector(".js-loginButton");
 const changeBanner = document.querySelector(".js-change__banner");
 const modificationLinks = document.querySelectorAll(".js-change__wrapper");
 const modalBackground = document.querySelector(".js-modal__fullPage");
@@ -201,46 +200,6 @@ const loginSubmit = () => {
 
 loginSubmit();
 
-//add an image 
-const uploadAnImage = () => {
-    const modalForm = document.querySelector(".js-modal__form");
-
-}
-
-const addAnImage = () => {
-    const modalForm = document.querySelector(".js-modal__form");
-    const imageTitle = document.querySelector(".js-modal__pictureTitleInput");
-    const categoryInput = document.querySelector(".js-modal__pictureCategoryInput");
-    modalForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const newImage = {
-            title: imageTitle.value,
-            category: categoryInput.value
-        };
-        const chargeUtile = JSON.stringify(newImage);
-
-        fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "multipart/form-data"
-            },
-            body: chargeUtile
-        })
-            .then((result) => {
-                if (result.ok) {
-                    return result.json();
-                }
-            })
-            .then((newImage) => {
-                token = newImage.token;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    });
-}
-
 //open the modal
 const openingTheModal = () => {
     const changePortfolio = document.querySelector("#change__portfolio");
@@ -340,9 +299,6 @@ const deleteAllGallery = () => {
 }
 
 const modalAddPicture = () => {
-    // <button class="button modal__addPicture--button js-modal__addPicture--button">
-    //      + Ajouter photo
-    // </button>
     modalGallery.innerHTML =
         `<div class="modal">
             <div class="modal__header">
@@ -350,11 +306,11 @@ const modalAddPicture = () => {
                 <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
             </div>
             <h2 class="modal__title">Ajout photo</h2>
-            <div class="modal__addPictureWrapper">
+            <div class="modal__addPictureWrapper js-modal__addPictureWrapper">
                 <img src="../FrontEnd/assets/icons/landscape.svg" alt="Image icon" class="modal__landscapeIcon" />
                 <form method="post" class="button modal__addPicture--button js-modal__addPicture--button">
                     <label for="image" class="modal__imageLabel">+Ajouter photo</label>
-                    <input id="image" type="file" accept=".jpeg, .png, .jpg" class="modal__fileInput" />
+                    <input id="image" type="file" accept=".jpeg, .png, .jpg" class="modal__fileInput js-modal__fileInput" required />
                 </form>
                 <p class="modal__imageFormat">jpg, png : 4mo max</p>
             </div>
@@ -362,26 +318,25 @@ const modalAddPicture = () => {
                 <label for="title" class="modal__pictureTitle">
                     Titre
                 </label>
-                <input type="text" id="title" class="modal__pictureTitleInput js-modal__pictureTitleInput" />
+                <input type="text" id="title" class="modal__pictureTitleInput js-modal__pictureTitleInput" name="title" required />
                 <label for="categorie" class="modal__pictureCategory">
-                Catégorie
+                    Catégorie
                 </label>
-                <select id="categorie" class="modal__pictureCategoryInput js-modal__pictureCategoryInput">
-                    <option>Tous</option>
-                    <option>Objets</option>
-                    <option>Appartements</option>
-                    <option>Hôtels & restaurants</option>
+                <select id="categorie" class="modal__pictureCategoryInput js-modal__pictureCategoryInput" required>
+                    <option value=""></option>
+                    <option value="Objets">Objets</option>
+                    <option value="Appartements">Appartements</option>
+                    <option value="Hotels & restaurants">Hotels & restaurants</option>
                 </select>
+                <div class="modal__addPictureFooter">
+                    <div class="modal__ligne"></div>
+                    <p class="js-modal__errorMessage"></p>
+                    <button type="submit" class="button modal__buttonSubmitPicture js-modal__buttonSubmitPicture">
+                        Valider
+                    </button>
+                </div>
             </form>
-            <div class="modal__addPictureFooter">
-                <div class="modal__ligne"></div>
-                <button type="submit" class="button modal__buttonSubmitPicture js-modal__buttonSubmitPicture">
-                    Valider
-                </button>
-            </div>
         </div>`;
-    const submitPictureButton = document.querySelector(".js-modal__buttonSubmitPicture");
-    submitPictureButton.disabled = "true";
 }
 
 // return to the previous modal
@@ -400,6 +355,101 @@ const addPictureModalFunction = () => {
         modalGallery.innerHTML = "";
         modalAddPicture();
         previousModale();
+        addAnImage();
+    })
+}
+
+//add an image 
+const addAnImage = () => {
+    let loadFile = "";
+    let fileReader = new FileReader();
+    const addPictureForm = document.querySelector(".js-modal__addPicture--button");
+    const fileImage = document.querySelector(".js-modal__fileInput");
+    const loadPicture = document.querySelector(".js-modal__addPictureWrapper");
+    const modalForm = document.querySelector(".js-modal__form");
+    const imageTitle = document.querySelector(".js-modal__pictureTitleInput");
+    const categoryInput = document.querySelector(".js-modal__pictureCategoryInput");
+    const submitPictureButton = document.querySelector(".js-modal__buttonSubmitPicture");
+    let categoryId = null;
+
+    addPictureForm.addEventListener("change", (event) => {
+        event.preventDefault();
+        loadFile = fileImage.files[0];
+        fileReader.addEventListener("loadend", () => {
+            loadPicture.innerHTML = `<img class="js-modal__newPicture" src="${fileReader.result}" alt="New picture" />`;
+            const newPicture = document.querySelector(".js-modal__newPicture");
+            newPicture.style.width = "129px";
+            newPicture.style.height = "170px";
+        })
+        fileReader.readAsDataURL(loadFile);
+    });
+
+    modalForm.addEventListener("change", (event) => {
+        event.preventDefault();
+
+        if (categoryInput.value === "Objets") {
+            categoryId = 1;
+        } else if (categoryInput.value === "Appartements") {
+            categoryId = 2;
+        } else if (categoryInput.value === "Hotels & restaurants") {
+            categoryId = 3;
+        }
+
+        const fileType = loadFile["type"];
+        const validImagesTypes = ["image/jpeg", "image/png", "image/jpg"];
+        const errorForm = document.querySelector(".js-modal__errorMessage");
+
+        if (validImagesTypes.includes(fileType) && imageTitle.value && typeof(categoryId) === "number") {
+            submitPictureButton.style.color = "#ffffff";
+            submitPictureButton.style.backgroundColor = "#1D6154";
+            submitPictureButton.style.border = "#1D6154";
+            errorForm.style.display = "none"
+        } else {
+            errorForm.innerText = `Vérifiez que tous les champs soient remplis !`
+            errorForm.style.marginTop = "24px"
+        }
+    });
+
+    modalForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        let workToCreate = null;
+
+        const formData = new FormData();
+        formData.append("image", loadFile);
+        formData.append("title", imageTitle.value);
+        formData.append("category", categoryId);
+
+        fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            body: formData
+            })
+            .then((result) => {
+                if (result.ok) {
+                    console.log(result);
+                    updateModalWorks(worksData);
+
+                    worksData.forEach(work => {
+                        workToCreate = work.id;
+                        const modalPicturesGallery = document.querySelector(".js-gallery--small");
+                        const figure = document.createElement("figure");
+                        figure.setAttribute("data-id", `${work.id}`);
+                        modalPicturesGallery.appendChild(figure);
+                        figure.innerHTML =
+                        `<div class="modal__trashIconWrapper">
+                            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${workToCreate}"></i>
+                        </div>
+                        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${fileReader.result}" />
+                        <figcaption class="modal__editing">éditer</figcaption>`;
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            }); 
     })
 }
 
