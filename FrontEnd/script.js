@@ -36,9 +36,9 @@ let apartments = null;
 let hostelsAndRestaurants = null;
 let worksData = null;
 let categoriesData = null;
-const gallery = document.querySelector(".js-gallery");
 
 const updateWorks = (worksData) => { 
+    const gallery = document.querySelector(".js-gallery");
     worksData.forEach(work => {
         const figure = document.createElement("figure");
         figure.setAttribute("data-id", `${work.id}`);
@@ -47,6 +47,29 @@ const updateWorks = (worksData) => {
         `<img class="js-pictures" crossorigin="anonymous" src="${work.imageUrl}" />
         <figcaption class="pictures__description">${work.title}</figcaption>`;
     })
+}
+
+const addNewWorkGallery = (addWork) => {
+    const modalPicturesGallery = document.querySelector(".js-gallery--small");
+    const figure = document.createElement("figure");
+    figure.setAttribute("data-id", `${addWork.id}`);
+    modalPicturesGallery.appendChild(figure);
+    figure.innerHTML =
+        `<div class="modal__trashIconWrapper">
+            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${addWork.id}"></i>
+        </div>
+        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${addWork.imageUrl}" />
+        <figcaption class="modal__editing">éditer</figcaption>`;
+}
+
+const addNewWorkModal = (addWork) => {
+    const gallery = document.querySelector(".js-gallery");
+    const figure = document.createElement("figure");
+    figure.setAttribute("data-id", `${addWork.id}`);
+    gallery.appendChild(figure);
+    figure.innerHTML = 
+        `<img class="js-pictures" crossorigin="anonymous" src="${addWork.imageUrl}" />
+        <figcaption class="pictures__description">${addWork.title}</figcaption>`;
 }
 
 // selection of the DOM
@@ -94,6 +117,7 @@ const updateCategories = (categories) => {
     }
 
     allWorks.addEventListener("click", () => {
+        const gallery = document.querySelector(".js-gallery");
         resetColor();
         allWorks.style.color = "#FFFFFF";
         allWorks.style.backgroundColor = "#1D6154";
@@ -102,6 +126,7 @@ const updateCategories = (categories) => {
     })
 
     objects.addEventListener("click", function () {
+        const gallery = document.querySelector(".js-gallery");
         resetColor();
         objects.style.color = "#FFFFFF";
         objects.style.backgroundColor = "#1D6154";
@@ -113,6 +138,7 @@ const updateCategories = (categories) => {
     })
 
     apartments.addEventListener("click", () => {
+        const gallery = document.querySelector(".js-gallery");
         resetColor();
         apartments.style.color = "#FFFFFF";
         apartments.style.backgroundColor = "#1D6154";
@@ -124,6 +150,7 @@ const updateCategories = (categories) => {
     })
 
     hostelsAndRestaurants.addEventListener("click", () => {
+        const gallery = document.querySelector(".js-gallery");
         resetColor();
         hostelsAndRestaurants.style.color = "#FFFFFF";
         hostelsAndRestaurants.style.backgroundColor = "#1D6154";
@@ -144,6 +171,7 @@ loginNavigation.addEventListener("click", () => {
 
 let token = "";
 const loginSubmit = () => {
+    const gallery = document.querySelector(".js-gallery");
     const userLogin = document.querySelector(".js-login__form");
     userLogin.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -272,6 +300,7 @@ const deleteWork = () => {
 }
 
 const deleteAllGallery = () => {
+    const gallery = document.querySelector(".js-gallery");
     const deleteAll = document.querySelector(".js-modal__deleteAllGallery");
     let workToDelete = 0;
     deleteAll.addEventListener("click", () => {
@@ -412,7 +441,6 @@ const addAnImage = () => {
 
     modalForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        let workToCreate = null;
 
         const formData = new FormData();
         formData.append("image", loadFile);
@@ -428,24 +456,13 @@ const addAnImage = () => {
             })
             .then((result) => {
                 if (result.ok) {
-                    console.log(result);
-                    updateModalWorks(worksData);
-
-                    worksData.forEach(work => {
-                        workToCreate = work.id;
-                        const modalPicturesGallery = document.querySelector(".js-gallery--small");
-                        const figure = document.createElement("figure");
-                        figure.setAttribute("data-id", `${work.id}`);
-                        modalPicturesGallery.appendChild(figure);
-                        figure.innerHTML =
-                        `<div class="modal__trashIconWrapper">
-                            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${workToCreate}"></i>
-                        </div>
-                        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${fileReader.result}" />
-                        <figcaption class="modal__editing">éditer</figcaption>`;
-                    })
-
+                    return result.json();
                 }
+            })
+            .then((addWork) => {
+                updateModalWorks(worksData);
+                addNewWorkGallery(addWork);
+                addNewWorkModal(addWork);
             })
             .catch((error) => {
                 console.log(error);
