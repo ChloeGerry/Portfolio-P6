@@ -72,6 +72,38 @@ const addNewWorkModal = (addWork) => {
         <figcaption class="pictures__description">${addWork.title}</figcaption>`;
 }
 
+const deleteNewWork = (addWork) => {
+    const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
+    let workToDelete = 0;
+    let deleteIconId = 0;
+    for (let i = 0; i < deleteIcon.length; i++) {
+        deleteIcon[i].addEventListener("click", () => {
+            deleteIconId = parseInt(deleteIcon[i].dataset.id);
+            if (addWork.id === deleteIconId) {
+                workToDelete = addWork.id;
+                fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                    .then((result) => {
+                        if (result.ok) {
+                            const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                            refreshPortfolioModale.remove();
+                            const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                            refreshPortfolio.remove();
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        })
+    }
+}
+
 // selection of the DOM
 const body = document.querySelector(".js-body");
 const headerNavigation = document.querySelectorAll(".js-header__navigation");
@@ -228,6 +260,20 @@ const loginSubmit = () => {
 
 loginSubmit();
 
+const logout = () => {
+    const headerNavigation = document.querySelectorAll(".js-header__navigation");
+    const loginNavigation = headerNavigation[2];
+    const changeBanner = document.querySelector(".js-change__banner");
+
+    loginNavigation.addEventListener("click", () => {
+        if (changeBanner.style.display === "initial") {
+            window.location.reload();
+        }
+    })
+}
+
+logout();
+
 //open the modal
 const openingTheModal = () => {
     const changePortfolio = document.querySelector("#change__portfolio");
@@ -273,6 +319,7 @@ const deleteWork = () => {
         deleteIcon[i].addEventListener("click", () => {
             worksData.forEach(work => {
                 deleteIconId = parseInt(deleteIcon[i].dataset.id);
+                console.log(deleteIcon[i].dataset.id);
                 if (work.id === deleteIconId) {
                     workToDelete = work.id;
                     fetch(`http://localhost:5678/api/works/${workToDelete}`, {
@@ -463,6 +510,7 @@ const addAnImage = () => {
                 updateModalWorks(worksData);
                 addNewWorkGallery(addWork);
                 addNewWorkModal(addWork);
+                deleteNewWork(addWork);
             })
             .catch((error) => {
                 console.log(error);
