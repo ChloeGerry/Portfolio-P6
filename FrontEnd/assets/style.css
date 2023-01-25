@@ -247,6 +247,7 @@ nav li {
 .change__wrapperLink {
 	display: flex;
 	cursor: pointer;
+	width: fit-content;
 }
 
 .change__icon {
