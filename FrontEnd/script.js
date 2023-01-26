@@ -208,7 +208,7 @@ loginNavigation.addEventListener("click", () => {
 })
 
 // function to validate the authentification
-let token = "";
+let token = null;
 const loginSubmit = () => {
     const gallery = document.querySelector(".js-gallery");
     const navigationMenuProjects = document.querySelector(".js-navigationMenu--projects");
@@ -340,8 +340,8 @@ const modalFooter = () => {
 // function to delete a work
 const deleteWork = () => {
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
-    let workToDelete = 0;
-    let deleteIconId = 0;
+    let workToDelete = null;
+    let deleteIconId = null;
 
     for (let i = 0; i < deleteIcon.length; i++) {
         deleteIcon[i].addEventListener("click", () => {
@@ -380,7 +380,7 @@ const deleteWork = () => {
 const deleteAllGallery = () => {
     const gallery = document.querySelector(".js-gallery");
     const deleteAll = document.querySelector(".js-modal__deleteAllGallery");
-    let workToDelete = 0;
+    let workToDelete = null;
 
     deleteAll.addEventListener("click", () => {
         worksData.forEach(work => {
@@ -435,7 +435,6 @@ const modalAddPicture = () => {
                     Catégorie
                 </label>
                 <select id="categorie" class="modal__pictureCategoryInput js-modal__pictureCategoryInput" required>
-                    <option value=""></option>
                     <option value="Objets">Objets</option>
                     <option value="Appartements">Appartements</option>
                     <option value="Hotels & restaurants">Hotels & restaurants</option>
@@ -471,6 +470,7 @@ const addPictureModalFunction = () => {
         modalGallery.innerHTML = "";
         modalAddPicture();
         previousModale();
+        closingModale();
         addAnImage();
     })
 }
@@ -479,6 +479,7 @@ const addPictureModalFunction = () => {
 const addAnImage = () => {
     let loadFile = "";
     let fileReader = new FileReader();
+    let categoryId = null;
     const addPictureForm = document.querySelector(".js-modal__addPicture--button");
     const fileImage = document.querySelector(".js-modal__fileInput");
     const loadPicture = document.querySelector(".js-modal__addPictureWrapper");
@@ -486,7 +487,6 @@ const addAnImage = () => {
     const imageTitle = document.querySelector(".js-modal__pictureTitleInput");
     const categoryInput = document.querySelector(".js-modal__pictureCategoryInput");
     const submitPictureButton = document.querySelector(".js-modal__buttonSubmitPicture");
-    let categoryId = null;
 
     addPictureForm.addEventListener("change", (event) => {
         event.preventDefault();
