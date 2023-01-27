@@ -37,10 +37,14 @@ let apartments = null;
 let hostelsAndRestaurants = null;
 let worksData = null;
 let categoriesData = null;
+const objectsCategoryId = 1;
+const apartmentsCategoryId = 2;
+const hostelsAndRestaurantsCategoryId = 3;
 
 // function to add dynamically the works in the gallery
 const updateWorks = (worksData) => { 
     const gallery = document.querySelector(".js-gallery");
+    gallery.innerHTML = "";
 
     worksData.forEach(work => {
         const figure = document.createElement("figure");
@@ -52,8 +56,8 @@ const updateWorks = (worksData) => {
     })
 }
 
-// function to add dynamically the new work in the gallery
-const addNewWorkGallery = (addWork) => {
+// function to add dynamically the new work in the modal
+const addNewWorkModal = (addWork) => { 
     const modalPicturesGallery = document.querySelector(".js-gallery--small");
 
     const figure = document.createElement("figure");
@@ -67,8 +71,8 @@ const addNewWorkGallery = (addWork) => {
         <figcaption class="modal__editing">éditer</figcaption>`;
 }
 
-// function to add dynamically the new work in the modal
-const addNewWorkModal = (addWork) => {
+// function to add dynamically the new work in the gallery
+const addNewWorkGallery = (addWork) => {
     const gallery = document.querySelector(".js-gallery");
     const figure = document.createElement("figure");
 
@@ -91,7 +95,6 @@ const deleteNewWork = (addWork) => {
 
             if (addWork.id === deleteIconId) {
                 workToDelete = addWork.id;
-
                 fetch(`http://localhost:5678/api/works/${workToDelete}`, {
                     method: "DELETE",
                     headers: {
@@ -143,61 +146,40 @@ const updateCategories = (categories) => {
         })
     }
 
-    allWorks.addEventListener("click", () => {
-        const gallery = document.querySelector(".js-gallery");
+    const updateCategoriesColor = (category) => {
         resetColor();
-        allWorks.style.color = "#FFFFFF";
-        allWorks.style.backgroundColor = "#1D6154";
+        category.style.color = "#FFFFFF";
+        category.style.backgroundColor = "#1D6154";
+    }
+
+    const filter = (category, categoryId) => {
+        const gallery = document.querySelector(".js-gallery");
+        updateCategoriesColor(category);
+
+        const filterWorks = worksData.filter((work) => {
+            return work.categoryId === categoryId;
+        })
+
         gallery.innerHTML = "";
+        updateWorks(filterWorks);
+    }
+
+    allWorks.addEventListener("click", () => {
+        updateCategoriesColor(allWorks);
         updateWorks(worksData);
     })
 
-    objects.addEventListener("click", function () {
-        const gallery = document.querySelector(".js-gallery");
-        resetColor();
-        objects.style.color = "#FFFFFF";
-        objects.style.backgroundColor = "#1D6154";
+    objects.addEventListener("click", () => filter(objects, objectsCategoryId));
 
-        const filterObjects = worksData.filter(function (work) {
-            return work.categoryId === 1;
-        })
+    apartments.addEventListener("click", () => filter(apartments, apartmentsCategoryId));
 
-        gallery.innerHTML = "";
-        updateWorks(filterObjects);
-    })
-
-    apartments.addEventListener("click", () => {
-        const gallery = document.querySelector(".js-gallery");
-        resetColor();
-        apartments.style.color = "#FFFFFF";
-        apartments.style.backgroundColor = "#1D6154";
-
-        const filterApartments = worksData.filter(function (work) {
-            return work.categoryId === 2;
-        })
-
-        gallery.innerHTML = "";
-        updateWorks(filterApartments);
-    })
-
-    hostelsAndRestaurants.addEventListener("click", () => {
-        const gallery = document.querySelector(".js-gallery");
-        resetColor();
-        hostelsAndRestaurants.style.color = "#FFFFFF";
-        hostelsAndRestaurants.style.backgroundColor = "#1D6154";
-
-        const filterHostelsAndRestaurants = worksData.filter(function (work) {
-            return work.categoryId === 3;
-        })
-
-        gallery.innerHTML = "";
-        updateWorks(filterHostelsAndRestaurants);
-    })
+    hostelsAndRestaurants.addEventListener("click", () => filter(hostelsAndRestaurants, hostelsAndRestaurantsCategoryId));
 }
 
 // event to make appears the login page
 const headerNavigation = document.querySelectorAll(".js-header__navigation");
 const loginNavigation = headerNavigation[2];
+const logout = headerNavigation[3];
 
 loginNavigation.addEventListener("click", () => {
     const loginWrapper = document.querySelector(".js-login");
@@ -245,7 +227,8 @@ const loginSubmit = () => {
                 loginWrapper.style.display = "none";
                 mainContent.style.display = "initial";
                 changeBanner.style.display = "initial";
-                loginNavigation.innerText = "logout";
+                loginNavigation.style.display = "none";
+                logout.style.display = "initial";
                 navigationMenuProjects.style.display = "none";
                 gallery.style.marginTop = "64px";
                 emailLabel.innerText = "";
@@ -279,19 +262,9 @@ const loginSubmit = () => {
 
 loginSubmit();
 
-// function to logout
-const logout = () => {
-    const changeBanner = document.querySelector(".js-change__banner");
-
-    loginNavigation.addEventListener("click", () => {
-
-        if (changeBanner.style.display === "initial") {
-            window.location.reload();
-        }
-    })
-}
-
-logout();
+logout.addEventListener("click", () => {
+    window.location.reload();
+})
 
 // function to open the modal
 const openingTheModal = () => {
@@ -301,7 +274,7 @@ const openingTheModal = () => {
 
     changePortfolio.addEventListener("click", () => {
         modalGallery.style.display = "initial";
-        modalBackground.style.position = "absolute";
+        modalBackground.style.position = "fixed";
     })
 }
 
@@ -311,14 +284,14 @@ const modalHeader = () => {
     const modalGallery = document.querySelector(".js-modal__gallery");
     
     modalGallery.innerHTML =
-    `<div class="modal">
-    <div class="modal__closingIconWrapper">
-    <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
-    </div>
-    <h2 class="modal__title">Galerie photo</h2>
-    </div>`;
-    
-    modalPicturesGallery.innerHTML = `<i class="fa-solid fa-up-down-left-right modal__moveIcon"></i>`;
+        `<div class="modal">
+            <div class="modal__closingIconWrapper">
+                <i class="fa-solid fa-xmark modal__closingIcon js-modal__closingIcon"></i>
+            </div>
+            <h2 class="modal__title">Galerie photo</h2>
+        </div>`;
+
+    modalPicturesGallery.innerHTML = `<i class="fa-solid fa-up-down-left-right modal__moveIcon js-modal__moveIcon"></i>`
 }
 
 // function to fill the modal footer
@@ -339,13 +312,13 @@ const modalFooter = () => {
 
 // function to delete a work
 const deleteWork = () => {
+    console.log(worksData);
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
     let workToDelete = null;
     let deleteIconId = null;
 
     for (let i = 0; i < deleteIcon.length; i++) {
         deleteIcon[i].addEventListener("click", () => {
-
             worksData.forEach(work => {
                 deleteIconId = parseInt(deleteIcon[i].dataset.id);
                
@@ -365,6 +338,7 @@ const deleteWork = () => {
                             refreshPortfolioModale.remove();
                             const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
                             refreshPortfolio.remove();
+                            
                         }
                     })
                     .catch((error) => {
@@ -435,6 +409,7 @@ const modalAddPicture = () => {
                     Catégorie
                 </label>
                 <select id="categorie" class="modal__pictureCategoryInput js-modal__pictureCategoryInput" required>
+                    <option value=""></option>
                     <option value="Objets">Objets</option>
                     <option value="Appartements">Appartements</option>
                     <option value="Hotels & restaurants">Hotels & restaurants</option>
@@ -504,12 +479,14 @@ const addAnImage = () => {
     modalForm.addEventListener("change", (event) => {
         event.preventDefault();
 
-        if (categoryInput.value === "Objets") {
-            categoryId = 1;
+        if (!categoryInput.value) {
+            categoryId = null;
+        } else if (categoryInput.value === "Objets") {
+            categoryId = objectsCategoryId;
         } else if (categoryInput.value === "Appartements") {
-            categoryId = 2;
+            categoryId = apartmentsCategoryId;
         } else if (categoryInput.value === "Hotels & restaurants") {
-            categoryId = 3;
+            categoryId = hostelsAndRestaurantsCategoryId;
         }
 
         const fileType = loadFile["type"];
@@ -517,13 +494,14 @@ const addAnImage = () => {
         const errorForm = document.querySelector(".js-modal__errorMessage");
 
         if (validImagesTypes.includes(fileType) && imageTitle.value && typeof(categoryId) === "number") {
-            submitPictureButton.style.color = "#ffffff";
             submitPictureButton.style.backgroundColor = "#1D6154";
             submitPictureButton.style.border = "#1D6154";
             errorForm.style.display = "none"
         } else {
-            errorForm.innerText = `Vérifiez que tous les champs soient remplis !`
-            errorForm.style.marginTop = "24px"
+            errorForm.innerText = `Vérifiez que tous les champs soient remplis !`;
+            errorForm.style.marginTop = "24px";
+            submitPictureButton.style.backgroundColor = "#A7A7A7";
+            submitPictureButton.style.border = "#A7A7A7";
         }
     });
 
@@ -561,7 +539,9 @@ const addAnImage = () => {
 
 // function for update the works dynamically in the modale 
 const modalGallery = document.querySelector(".js-modal__gallery");
+modalGallery.innerHTML = "";
 const updateModalWorks = (worksData) => {
+    console.log(worksData);
     modalHeader();
     modalGallery.appendChild(modalPicturesGallery);
 
@@ -570,12 +550,13 @@ const updateModalWorks = (worksData) => {
         figure.setAttribute("data-id", `${work.id}`);
         modalPicturesGallery.appendChild(figure);
         figure.innerHTML =
-        `<div class="modal__trashIconWrapper">
-            <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${work.id}"></i>
-        </div>
-        <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
-        <figcaption class="modal__editing">éditer</figcaption>`;
+            `<div class="modal__trashIconWrapper">
+                <i class="fa-regular fa-trash-can modal__trashIcon js-modal__trashIcon" data-id="${work.id}"></i>
+            </div>
+            <img class="modal__pictures js-modal__pictures" crossorigin="anonymous" src="${work.imageUrl}" />
+            <figcaption class="modal__editing">éditer</figcaption>`;
     })
+
     modalFooter();
     deleteWork();
     deleteAllGallery();

@@ -13,6 +13,11 @@
 		<script src="./script.js" defer></script>
 	</head>
 	<body>
+		<div class="modal__fullPage js-modal__fullPage">
+		</div>
+		<dialog class="modal__gallery--wrapper js-modal__gallery">
+			<div class="gallery--small js-gallery--small"></div>
+		</dialog>
 		<div class="js-change__banner">
 			<div class="change__banner">
 				<i class="fa-regular fa-pen-to-square change__banner--icon"></i>
@@ -30,15 +35,11 @@
 						<li class="js-header__navigation">projets</li>
 						<li class="js-header__navigation">contact</li>
 						<li class="js-header__navigation">login</li>
+						<li class="header__logout js-header__navigation">logout</li>
 						<li><img src="./assets/icons/instagram.png" alt="Instagram" class="header__logo"></li>
 					</ul>
 				</nav>
 			</header>
-			<div class="modal__fullPage js-modal__fullPage">
-			</div>
-			<dialog class="modal__gallery--wrapper js-modal__gallery">
-				<div class="gallery--small js-gallery--small"></div>
-			</dialog>
 			<section class="login js-login">
 				<div class="login__wrapper">
 					<h2>Log In</h2>
@@ -46,12 +47,12 @@
 						<label for="ownerEmail" class="login__text">
 							E-mail
 						</label>
-						<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" placeholder="sophie.bluel@test.tld" name="email" required />
+						<input type="email" id="ownerEmail" class="login__emailInput js-emailInput" name="email" required />
 						<div class="js-emailLabel"></div>
 						<label for="password" class="login__text">
 							Mot de passe
 						</label>
-						<input type="password" id="password" class="login__passwordInput js-passwordInput" placeholder="S0phie" name="password" required />
+						<input type="password" id="password" class="login__passwordInput js-passwordInput" name="password" required />
 						<div class="js-passwordLabel"></div>
 						<div class="login__buttonWrapper">
 							<button type="submit" class="button login__button">
