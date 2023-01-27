@@ -8,8 +8,8 @@ fetch("http://localhost:5678/api/works")
     .then((works) => {
         worksData = works;
         updateWorks(worksData);
-        updateModalWorks(worksData);
         openingTheModal();
+        updateModalWorks(worksData);
     })
     .catch((error) => {
         console.log(error);
@@ -86,7 +86,7 @@ const addNewWorkGallery = (addWork) => {
 // function to delete dynamically the new work
 const deleteNewWork = (addWork) => {
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
-    let workToDelete = 0;
+    let workToDeleteId = 0;
     let deleteIconId = 0;
 
     for (let i = 0; i < deleteIcon.length; i++) {
@@ -94,8 +94,9 @@ const deleteNewWork = (addWork) => {
             deleteIconId = parseInt(deleteIcon[i].dataset.id);
 
             if (addWork.id === deleteIconId) {
-                workToDelete = addWork.id;
-                fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+                workToDeleteId = addWork.id;
+
+                fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -104,9 +105,9 @@ const deleteNewWork = (addWork) => {
                 })
                 .then((result) => {
                     if (result.ok) {
-                        const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                        const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
                         refreshPortfolioModale.remove();
-                        const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                        const refreshPortfolio = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
                         refreshPortfolio.remove();
                     }
                 })
@@ -312,20 +313,18 @@ const modalFooter = () => {
 
 // function to delete a work
 const deleteWork = () => {
-    console.log(worksData);
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
-    let workToDelete = null;
+    let workToDeleteId = null;
     let deleteIconId = null;
-
     for (let i = 0; i < deleteIcon.length; i++) {
         deleteIcon[i].addEventListener("click", () => {
             worksData.forEach(work => {
                 deleteIconId = parseInt(deleteIcon[i].dataset.id);
                
                 if (work.id === deleteIconId) {
-                    workToDelete = work.id;
+                    workToDeleteId = work.id;
 
-                    fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+                    fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json",
@@ -334,11 +333,11 @@ const deleteWork = () => {
                     })
                     .then((result) => {
                         if (result.ok) {
-                            const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                            worksData = worksData.filter(work => work.id !== workToDeleteId);
+                            const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
                             refreshPortfolioModale.remove();
-                            const refreshPortfolio = document.querySelector(`figure[data-id="${workToDelete}"]`);
+                            const refreshPortfolio = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
                             refreshPortfolio.remove();
-                            
                         }
                     })
                     .catch((error) => {
@@ -354,13 +353,13 @@ const deleteWork = () => {
 const deleteAllGallery = () => {
     const gallery = document.querySelector(".js-gallery");
     const deleteAll = document.querySelector(".js-modal__deleteAllGallery");
-    let workToDelete = null;
+    let workToDeleteId = null;
 
     deleteAll.addEventListener("click", () => {
         worksData.forEach(work => {
-            workToDelete = work.id;
+            workToDeleteId = work.id;
             
-            fetch(`http://localhost:5678/api/works/${workToDelete}`, {
+            fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -539,9 +538,7 @@ const addAnImage = () => {
 
 // function for update the works dynamically in the modale 
 const modalGallery = document.querySelector(".js-modal__gallery");
-modalGallery.innerHTML = "";
 const updateModalWorks = (worksData) => {
-    console.log(worksData);
     modalHeader();
     modalGallery.appendChild(modalPicturesGallery);
 
