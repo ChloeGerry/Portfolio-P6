@@ -5,11 +5,11 @@ fetch("http://localhost:5678/api/works")
             return result.json();
         }
     })
-    .then((works) => {
-        worksData = works;
-        updateWorks(worksData);
-        openingTheModal();
-        updateModalWorks(worksData);
+    .then((worksData) => {
+        works = worksData;
+        updateWorks(works);
+        displayLoginPage();
+        updateModalWorks(works);
     })
     .catch((error) => {
         console.log(error);
@@ -22,8 +22,8 @@ fetch("http://localhost:5678/api/categories")
             return result.json();
         }
     })
-    .then((categories) => {
-        categoriesData = categories;
+    .then((categoriesData) => {
+        categories = categoriesData;
         updateCategories(categories);
     })
     .catch((error) => {
@@ -35,20 +35,20 @@ let allWorks = null;
 let objects = null;
 let apartments = null;
 let hostelsAndRestaurants = null;
-let worksData = null;
-let categoriesData = null;
+let works = null;
+let categories = null;
 const objectsCategoryId = 1;
 const apartmentsCategoryId = 2;
 const hostelsAndRestaurantsCategoryId = 3;
 
 // function to add dynamically the works in the gallery
-const updateWorks = (worksData) => { 
+const updateWorks = (works) => { 
     const gallery = document.querySelector(".js-gallery");
     gallery.innerHTML = "";
 
-    worksData.forEach(work => {
+    works.forEach(work => {
         const figure = document.createElement("figure");
-        figure.setAttribute("data-id", `${work.id}`);
+        figure.setAttribute("data-id", work.id);
         gallery.appendChild(figure);
         figure.innerHTML = 
         `<img class="js-pictures" crossorigin="anonymous" src="${work.imageUrl}" />
@@ -157,7 +157,7 @@ const updateCategories = (categories) => {
         const gallery = document.querySelector(".js-gallery");
         updateCategoriesColor(category);
 
-        const filterWorks = worksData.filter((work) => {
+        const filterWorks = works.filter((work) => {
             return work.categoryId === categoryId;
         })
 
@@ -167,7 +167,7 @@ const updateCategories = (categories) => {
 
     allWorks.addEventListener("click", () => {
         updateCategoriesColor(allWorks);
-        updateWorks(worksData);
+        updateWorks(works);
     })
 
     objects.addEventListener("click", () => filter(objects, objectsCategoryId));
@@ -268,7 +268,7 @@ logout.addEventListener("click", () => {
 })
 
 // function to open the modal
-const openingTheModal = () => {
+const displayLoginPage = () => {
     const modalBackground = document.querySelector(".js-modal__fullPage");
     const modalGallery = document.querySelector(".js-modal__gallery");
     const changePortfolio = document.querySelector("#change__portfolio");
@@ -316,9 +316,10 @@ const deleteWork = () => {
     const deleteIcon = document.querySelectorAll(".js-modal__trashIcon");
     let workToDeleteId = null;
     let deleteIconId = null;
+
     for (let i = 0; i < deleteIcon.length; i++) {
         deleteIcon[i].addEventListener("click", () => {
-            worksData.forEach(work => {
+            works.forEach(work => {
                 deleteIconId = parseInt(deleteIcon[i].dataset.id);
                
                 if (work.id === deleteIconId) {
@@ -333,7 +334,7 @@ const deleteWork = () => {
                     })
                     .then((result) => {
                         if (result.ok) {
-                            worksData = worksData.filter(work => work.id !== workToDeleteId);
+                            works = works.filter(work => work.id !== workToDeleteId);
                             const refreshPortfolioModale = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
                             refreshPortfolioModale.remove();
                             const refreshPortfolio = document.querySelector(`figure[data-id="${workToDeleteId}"]`);
@@ -356,7 +357,7 @@ const deleteAllGallery = () => {
     let workToDeleteId = null;
 
     deleteAll.addEventListener("click", () => {
-        worksData.forEach(work => {
+        works.forEach(work => {
             workToDeleteId = work.id;
             
             fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
@@ -431,7 +432,7 @@ const previousModale = () => {
 
     leftArrow.addEventListener("click", () => {
         modalGallery.innerHTML = "";
-        updateModalWorks(worksData);
+        updateModalWorks(works);
     })
 }
 
@@ -525,7 +526,7 @@ const addAnImage = () => {
             }
         })
         .then((addWork) => {
-            updateModalWorks(worksData);
+            updateModalWorks(works);
             addNewWorkGallery(addWork);
             addNewWorkModal(addWork);
             deleteNewWork(addWork);
@@ -538,11 +539,11 @@ const addAnImage = () => {
 
 // function for update the works dynamically in the modale 
 const modalGallery = document.querySelector(".js-modal__gallery");
-const updateModalWorks = (worksData) => {
+const updateModalWorks = (works) => {
     modalHeader();
     modalGallery.appendChild(modalPicturesGallery);
 
-    worksData.forEach(work => {
+    works.forEach(work => {
         const figure = document.createElement("figure");
         figure.setAttribute("data-id", `${work.id}`);
         modalPicturesGallery.appendChild(figure);
