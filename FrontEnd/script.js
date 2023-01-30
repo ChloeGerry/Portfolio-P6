@@ -61,7 +61,7 @@ const addNewWorkModal = (addWork) => {
     const modalPicturesGallery = document.querySelector(".js-gallery--small");
 
     const figure = document.createElement("figure");
-    figure.setAttribute("data-id", `${addWork.id}`);
+    figure.setAttribute("data-id", addWork.id);
     modalPicturesGallery.appendChild(figure);
     figure.innerHTML =
         `<div class="modal__trashIconWrapper">
@@ -76,7 +76,7 @@ const addNewWorkGallery = (addWork) => {
     const gallery = document.querySelector(".js-gallery");
     const figure = document.createElement("figure");
 
-    figure.setAttribute("data-id", `${addWork.id}`);
+    figure.setAttribute("data-id", addWork.id);
     gallery.appendChild(figure);
     figure.innerHTML = 
         `<img class="js-pictures" crossorigin="anonymous" src="${addWork.imageUrl}" />
@@ -153,7 +153,7 @@ const updateCategories = (categories) => {
         category.style.backgroundColor = "#1D6154";
     }
 
-    const filter = (category, categoryId) => {
+    const filterWorksByCategory = (category, categoryId) => {
         const gallery = document.querySelector(".js-gallery");
         updateCategoriesColor(category);
 
@@ -170,11 +170,11 @@ const updateCategories = (categories) => {
         updateWorks(works);
     })
 
-    objects.addEventListener("click", () => filter(objects, objectsCategoryId));
+    objects.addEventListener("click", () => filterWorksByCategory(objects, objectsCategoryId));
 
-    apartments.addEventListener("click", () => filter(apartments, apartmentsCategoryId));
+    apartments.addEventListener("click", () => filterWorksByCategory(apartments, apartmentsCategoryId));
 
-    hostelsAndRestaurants.addEventListener("click", () => filter(hostelsAndRestaurants, hostelsAndRestaurantsCategoryId));
+    hostelsAndRestaurants.addEventListener("click", () => filterWorksByCategory(hostelsAndRestaurants, hostelsAndRestaurantsCategoryId));
 }
 
 // event to make appears the login page
@@ -382,7 +382,7 @@ const deleteAllGallery = () => {
 }
 
 // function to fill the body for the modal
-const modalAddPicture = () => {
+const fillModalAddPictureBody = () => {
     const modalGallery = document.querySelector(".js-modal__gallery");
 
     modalGallery.innerHTML =
@@ -437,13 +437,13 @@ const previousModale = () => {
 }
 
 // function to refresh the modal to access to the interface that allow to add an image
-const addPictureModalFunction = () => {
+const fillModalWithAddPictureTemplate = () => {
     const modalGallery = document.querySelector(".js-modal__gallery");
     const addPictureModal = document.querySelector(".js-button__addPicture--open");
 
     addPictureModal.addEventListener("click", () => {
         modalGallery.innerHTML = "";
-        modalAddPicture();
+        fillModalAddPictureBody();
         previousModale();
         closingModale();
         addAnImage();
@@ -545,7 +545,7 @@ const updateModalWorks = (works) => {
 
     works.forEach(work => {
         const figure = document.createElement("figure");
-        figure.setAttribute("data-id", `${work.id}`);
+        figure.setAttribute("data-id", work.id);
         modalPicturesGallery.appendChild(figure);
         figure.innerHTML =
             `<div class="modal__trashIconWrapper">
@@ -559,7 +559,7 @@ const updateModalWorks = (works) => {
     deleteWork();
     deleteAllGallery();
     closingModale();
-    addPictureModalFunction();
+    fillModalWithAddPictureTemplate();
 }
 
 // function to close the modal with the icon
